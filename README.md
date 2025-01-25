@@ -90,7 +90,7 @@ Special thank you for all people that contributed for this project.
       <a href="#">
         <img src="https://avatars.githubusercontent.com/u/80013701?v=4" width="100px;" alt="Ronildo Lima Profile Picture"/><br>
         <sub>
-          <b>Gabriel Lira</b>
+          <b>Ronildo Lima</b>
         </sub>
       </a>
     </td>
@@ -98,7 +98,7 @@ Special thank you for all people that contributed for this project.
       <a href="#">
         <img src="https://avatars.githubusercontent.com/u/110574063?v=4" width="100px;" alt="Rayane Rodrigues Profile Picture"/><br>
         <sub>
-          <b>Ezequias Soares</b>
+          <b>Rayane Rodrigues</b>
         </sub>
       </a>
     </td>
@@ -106,7 +106,7 @@ Special thank you for all people that contributed for this project.
       <a href="#">
         <img src="https://avatars.githubusercontent.com/u/100695815?v=4" width="100px;" alt="Tamires Xavier Profile Picture"/><br>
         <sub>
-          <b>Eric Soares</b>
+          <b>Tamires Xavier</b>
         </sub>
       </a>
     </td>
