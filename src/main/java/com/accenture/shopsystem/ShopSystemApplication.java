@@ -1,4 +1,4 @@
-package com.accenture.shopsystem.shop.system;
+package com.accenture.shopsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
