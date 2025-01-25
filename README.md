@@ -7,6 +7,8 @@
 [JUNIT_BADGE]:https://img.shields.io/badge/JUnit5-25A162.svg?style=for-the-badge&logo=JUnit5&logoColor=white
 [FLYWAY_BADGE]:https://img.shields.io/badge/Flyway-%2300A6A0.svg?style=for-the-badge&logo=flyway&logoColor=white
 [SPRING_SECURITY_BADGE]:https://img.shields.io/badge/Spring%20Security-6DB33F.svg?style=for-the-badge&logo=Spring-Security&logoColor=white
+[THYMELEAF_BADGE]:https://img.shields.io/badge/Thymeleaf-005F0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white
+
 
 <h1 align="center" style="font-weight: bold;">Shop System 💻</h1>
 
@@ -19,6 +21,8 @@
 ![junit][JUNIT_BADGE]
 ![flyway][FLYWAY_BADGE]
 ![springsecurity][SPRING_SECURITY_BADGE]
+![thymeleaf][THYMELEAF_BADGE]
+
 
 <p align="center">
  <a href="#started">Getting Started</a> • 
