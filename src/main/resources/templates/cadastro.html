@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cadastrar Vendedor</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            height: 100vh; /* Altura total da viewport */
+            display: flex;
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
+            font-family: Arial, sans-serif; /* Fonte mais profissional */
+        }
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .form-label {
+            font-weight: bold; /* Rótulos em negrito */
+        }
+        .btn-primary {
+            background-color: #4CAF50; /* Botão verde */
+            border-color: #4CAF50;
+        }
+        .btn-primary:hover {
+            background-color: #45a049; /* Efeito ao passar o mouse */
+            border-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card shadow">
+        <div class="card-body">
+            <h1 class="text-center mb-4" style="color: #4CAF50;">Cadastrar</h1>
+            <form th:action="@{/user/cadastrar}" method="post" class="mt-4">
+                <!-- Nome -->
+                <div class="mb-3">
+                    <label for="vendedorNome" class="form-label">Nome</label>
+                    <input type="text" id="vendedorNome" name="vendedorNome" class="form-control" placeholder="Digite o nome do vendedor" required>
+                </div>
+
+                <!-- Setor -->
+                <div class="mb-3">
+                    <label for="vendedorSetor" class="form-label">Setor</label>
+                    <input type="text" id="vendedorSetor" name="vendedorSetor" class="form-control" placeholder="Digite o setor do vendedor" required>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Digite o e-mail do vendedor" required>
+                </div>
+
+                <!-- Senha -->
+                <div class="mb-3">
+                    <label for="password" class="form-label">Senha</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Crie uma senha" required>
+                </div>
+
+                <!-- Botão de Enviar -->
+                <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+            </form>
+            <div class="text-center mt-3">
+                <a href="/login" class="link-primary">Já tem uma conta? Faça login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
