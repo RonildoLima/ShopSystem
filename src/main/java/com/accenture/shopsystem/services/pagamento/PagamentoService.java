@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.accenture.shopsystem.config.RabbitMQConfigPagamento;
+import com.accenture.shopsystem.config.RabbitMqConfig;
 import com.accenture.shopsystem.domain.pagamento.Pagamento;
 import com.accenture.shopsystem.dtos.pagamento.PagamentoDTO;
 import com.accenture.shopsystem.dtos.pagamento.PedidoMensagem;
@@ -77,7 +77,7 @@ public class PagamentoService {
     @PostMapping("/processar")
     public ResponseEntity<Map<String, Object>> processarPagamento(@RequestBody PedidoMensagem pedido) {
         pedido.setStatus("PENDENTE");
-        rabbitTemplate.convertAndSend(RabbitMQConfigPagamento.EXCHANGE_PEDIDOS, "pedidos", pedido);
+        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_PEDIDOS, "pedidos", pedido);
 
         // Construindo uma resposta personalizada
         Map<String, Object> resposta = new HashMap<>();

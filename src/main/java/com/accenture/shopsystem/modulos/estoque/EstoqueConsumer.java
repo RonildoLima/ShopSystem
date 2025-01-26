@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class EstoqueConsumer {
 
     @Autowired
-    private ProdutoRepository produtoRepository;
+    ProdutoRepository produtoRepository;
 
     @RabbitListener(queues = "estoque-queue")
     public void atualizarEstoque(Pedido pedido) {
