@@ -15,6 +15,7 @@ public class RabbitMqConfig {
     public static final String PEDIDO_QUEUE = "pedido-queue";
     public static final String ESTOQUE_QUEUE = "estoque-queue";
     public static final String EXCHANGE_NAME = "pedido-exchange";
+    public static final String EXCHANGE_PEDIDOS = "pedidos";
     public static final String PEDIDO_ROUTING_KEY = "pedido.routingkey";
     public static final String ESTOQUE_ROUTING_KEY = "estoque.routingkey";
 
