@@ -24,6 +24,7 @@ public class Pagamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     @Column(nullable = false)
     private Long pedidoId;
 
