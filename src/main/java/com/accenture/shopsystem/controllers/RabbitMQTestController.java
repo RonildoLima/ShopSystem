@@ -1,5 +1,6 @@
 package com.accenture.shopsystem.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ public class RabbitMQTestController {
     }
 
     @GetMapping("/test-rabbit")
+    @Operation(summary = "Envio de mensagem", description = "Método para testar o envio de mensagem para o Rabbit")
     public String testRabbit() {
         try {
             // Envia diretamente para a fila "teste" utilizando o default exchange

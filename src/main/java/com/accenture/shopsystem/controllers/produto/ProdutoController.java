@@ -5,6 +5,7 @@ import com.accenture.shopsystem.domain.Vendedor.Vendedor;
 import com.accenture.shopsystem.dtos.produto.ProdutoRequestDTO;
 import com.accenture.shopsystem.repositories.ProdutoRepository;
 import com.accenture.shopsystem.repositories.VendedorRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,27 +36,22 @@ public class ProdutoController {
     }
 
     @PostMapping("/produtos/adicionar")
+    @Operation(summary = "Adicionar produto", description = "Método para salvar um novo produto")
     public RedirectView adicionarProduto(@ModelAttribute ProdutoRequestDTO produtoRequestDTO) {
-        // Obter o usuário autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // Inicializa o email do usuário
         String email;
 
         if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User) {
             // Autenticado via Google (OAuth2)
             DefaultOAuth2User oauth2User = (DefaultOAuth2User) authentication.getPrincipal();
-            email = (String) oauth2User.getAttribute("email"); // Obtém o email do Google
+            email = (String) oauth2User.getAttribute("email");
         } else {
-            // Autenticado normalmente
             email = authentication.getName();
         }
 
-        // Buscar o vendedor pelo email
         Vendedor vendedor = vendedorRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Vendedor não encontrado"));
 
-        // Criar o produto
         Produto produto = new Produto();
         produto.setProdutoDescricao(produtoRequestDTO.getProdutoDescricao());
         produto.setProdutoValor(produtoRequestDTO.getProdutoValor());
@@ -69,7 +65,6 @@ public class ProdutoController {
 
         produto.setVendedor(vendedor);
 
-        // Salva o produto no banco
         produtoRepository.save(produto);
 
         System.out.println("Produto adicionado com sucesso: " + produto.getProdutoDescricao()
@@ -81,6 +76,7 @@ public class ProdutoController {
 
 
     @DeleteMapping("{vendedorId}/produtos/{produtoId}")
+    @Operation(summary = "Deletar produto", description = "Método para deletar um produto")
     public ResponseEntity<Void> excluirProduto(
             @PathVariable String vendedorId,
             @PathVariable String produtoId) {
@@ -90,7 +86,6 @@ public class ProdutoController {
         if (produtoExistente.isPresent()) {
             Produto produto = produtoExistente.get();
 
-            // Verifica se o vendedor associado ao produto é o mesmo do ID fornecido
             if (!produto.getVendedor().getId().equals(vendedorId)) {
                 return ResponseEntity.status(403).build();
             }
@@ -104,6 +99,7 @@ public class ProdutoController {
 
     @PreAuthorize("permitAll()")
     @GetMapping(value = "/{vendedorId}/listar", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Listar produtos", description = "Método para listar os produtos do vendedor")
     public ResponseEntity<Iterable<Produto>> listarProdutosPorVendedor(@PathVariable String vendedorId) {
         // Busca todos os produtos associados ao vendedor
         Iterable<Produto> produtos = produtoRepository.findByVendedorId(vendedorId);

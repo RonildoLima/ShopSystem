@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.accenture.shopsystem.config.RabbitMQConfigPagamento;
+import com.accenture.shopsystem.config.RabbitMqConfig;
 import com.accenture.shopsystem.dtos.pagamento.PagamentoDTO;
 import com.accenture.shopsystem.dtos.pagamento.PedidoMensagem;
 import com.accenture.shopsystem.services.pagamento.PagamentoService;
@@ -69,7 +69,7 @@ public class PagamentoController {
     public ResponseEntity<String> processarPagamento(@RequestBody PedidoMensagem pedido) {
         System.out.println("Recebendo pedido: " + pedido);
         pedido.setStatus("PENDENTE");
-        rabbitTemplate.convertAndSend(RabbitMQConfigPagamento.EXCHANGE_PEDIDOS, "pedidos", pedido);
+        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_PEDIDOS, "pedidos", pedido);
         System.out.println("Pedido enviado para a fila.");
         return ResponseEntity.ok("Pagamento enviado para processamento.");
     }
