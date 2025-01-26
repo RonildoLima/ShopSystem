@@ -13,8 +13,10 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
 
     public static final String PEDIDO_QUEUE = "pedido-queue";
+    public static final String ESTOQUE_QUEUE = "estoque-queue";
     public static final String EXCHANGE_NAME = "pedido-exchange";
     public static final String PEDIDO_ROUTING_KEY = "pedido.routingkey";
+    public static final String ESTOQUE_ROUTING_KEY = "estoque.routingkey";
 
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -24,10 +26,16 @@ public class RabbitMqConfig {
         return factory;
     }
 
-    // Fila para pedidos completos
+    // Fila para pedidos
     @Bean
     public Queue pedidoQueue() {
         return new Queue(PEDIDO_QUEUE, true); // Fila durável
+    }
+
+    // Fila para estoque
+    @Bean
+    public Queue estoqueQueue() {
+        return new Queue(ESTOQUE_QUEUE, true); // Fila durável
     }
 
     // Exchange do tipo Topic
@@ -36,10 +44,16 @@ public class RabbitMqConfig {
         return new TopicExchange(EXCHANGE_NAME);
     }
 
-    // Binding para pedidos
+    // Binding para a fila de pedidos
     @Bean
     public Binding pedidoBinding(Queue pedidoQueue, TopicExchange exchange) {
         return BindingBuilder.bind(pedidoQueue).to(exchange).with(PEDIDO_ROUTING_KEY);
+    }
+
+    // Binding para a fila de estoque
+    @Bean
+    public Binding estoqueBinding(Queue estoqueQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(estoqueQueue).to(exchange).with(ESTOQUE_ROUTING_KEY);
     }
 
     // Conversor de mensagens para JSON
@@ -56,4 +70,3 @@ public class RabbitMqConfig {
         return rabbitTemplate;
     }
 }
-
