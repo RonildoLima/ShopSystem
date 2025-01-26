@@ -67,6 +67,9 @@
                     <a class="nav-link" href="/exibirPedidos">Pedidos</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/statusPedidos">Status</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>
             </ul>
@@ -84,6 +87,7 @@
                 <th>Nome do Produto</th>
                 <th>Valor</th>
                 <th>Quantidade em Estoque</th>
+                <th>Data de inserção</th>
             </tr>
             </thead>
             <tbody>
@@ -91,6 +95,7 @@
                 <td th:text="${produto.produtoDescricao}">Nome do Produto</td>
                 <td th:text="${produto.produtoValor}">Valor</td>
                 <td th:text="${produto.quantidadeEstoque}">Quantidade em Estoque</td>
+                <td th:text="${produto.produtoDataHoraSaida}">Data de inserção</td>
             </tr>
             </tbody>
         </table>

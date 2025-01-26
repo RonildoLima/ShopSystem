@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Pedidos</title>
+  <title>Status dos Pedidos</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -76,27 +76,27 @@
   </div>
 </nav>
 
-<!-- Pedidos -->
+<!-- Status dos Pedidos -->
 <div class="container mt-5">
-  <h1 class="text-center mb-4" style="color: #4CAF50;">Pedidos</h1>
+  <h1 class="text-center mb-4" style="color: #4CAF50;">Status dos Pedidos</h1>
   <div class="table-responsive">
     <table class="table table-striped table-hover">
       <thead class="table-success">
       <tr>
-        <th>Descrição</th>
-        <th>Quantidade de Itens</th>
-        <th>Valor</th>
+        <th>Descrição do Pedido</th>
+        <th>Status</th>
+        <th>Data/Hora do Status</th>
+        <th>Data/Hora do Pagamento</th>
       </tr>
       </thead>
       <tbody>
-      <tr th:each="pedido : ${pedidos}">
-        <!-- Informações do Pedido -->
-        <td th:text="${pedido.pedidoDescricao}">Descrição</td>
-        <td th:text="${pedido.pedidoQuantidade}">Quantidade de Itens</td>
-        <td th:text="${pedido.pedidoValor}">Valor</td>
+      <tr th:each="status : ${historicoStatus}">
+        <td th:text="${status.pedido.pedidoDescricao}">Descrição do Pedido</td>
+        <td th:text="${status.statusPedido}">Status</td>
+        <td th:text="${status.dataHoraStatusPedido}">Data/Hora do Status</td>
+        <td th:text="${status.dataHoraPagamento != null ? status.dataHoraPagamento : 'Não disponível'}">Data/Hora do Pagamento</td>
       </tr>
       </tbody>
-
     </table>
   </div>
 </div>
