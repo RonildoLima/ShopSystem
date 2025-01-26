@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @RestController
@@ -59,6 +60,13 @@ public class ProdutoController {
         produto.setProdutoDescricao(produtoRequestDTO.getProdutoDescricao());
         produto.setProdutoValor(produtoRequestDTO.getProdutoValor());
         produto.setQuantidadeEstoque(produtoRequestDTO.getQuantidadeEstoque());
+
+        LocalDateTime dataHoraStatus = LocalDateTime.now();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        String dataHoraFormatada = dataHoraStatus.format(formatter);
+        produto.setProdutoDataHoraSaida(LocalDateTime.parse(dataHoraFormatada, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+
         produto.setVendedor(vendedor);
 
         // Salva o produto no banco

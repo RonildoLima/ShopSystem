@@ -30,7 +30,7 @@ public class Produto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(nullable = false)
-    private LocalDateTime produtoDataHoraSaida = LocalDateTime.now ();
+    private LocalDateTime produtoDataHoraSaida;
 
     @Column(nullable = false)
     private Integer quantidadeEstoque;

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,10 +91,23 @@ public class PedidoConsumer {
             Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
             // Processa o histórico de status
-            PedidoHistoricoStatus historicoStatus = new PedidoHistoricoStatus ();
+            PedidoHistoricoStatus historicoStatus = new PedidoHistoricoStatus();
             historicoStatus.setPedido(pedidoSalvo);
             historicoStatus.setStatusPedido(StatusPedidoEnum.PENDENTE);
-            historicoStatus.setDataHoraStatusPedido(LocalDateTime.now());
+
+// Define a data/hora formatada
+            LocalDateTime dataHoraStatus = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String dataHoraFormatada = dataHoraStatus.format(formatter);
+
+// Converte a data/hora formatada de volta para LocalDateTime, se necessário
+// Se você precisa armazenar em LocalDateTime, pode evitar formatar como String para gravar
+            historicoStatus.setDataHoraStatusPedido(LocalDateTime.parse(dataHoraFormatada, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+
+// Opcional: para saída no console
+            System.out.println("Data/Hora formatada: " + dataHoraFormatada);
+
+// Define o pagamento como nulo
             historicoStatus.setDataHoraPagamento(null);
 
             pedidoHistoricoStatusRepository.save(historicoStatus);
