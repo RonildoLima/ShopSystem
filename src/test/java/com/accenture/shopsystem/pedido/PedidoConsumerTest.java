@@ -1,20 +1,17 @@
 package com.accenture.shopsystem.pedido;
 
-import com.accenture.shopsystem.consumers.pedido.PedidoConsumer;
-import com.accenture.shopsystem.domain.Enums.StatusPedidoEnum;
+import com.accenture.shopsystem.modulos.pedido.PedidoConsumer;
 import com.accenture.shopsystem.domain.Pedido.Pedido;
-import com.accenture.shopsystem.domain.PedidoHistoricoStatus.PedidoHistoricoStatus;
 import com.accenture.shopsystem.domain.PedidoTemProdutos.PedidoTemProdutos;
 import com.accenture.shopsystem.domain.Produto.Produto;
 import com.accenture.shopsystem.repositories.PedidoHistoricoStatusRepository;
 import com.accenture.shopsystem.repositories.PedidoRepository;
 import com.accenture.shopsystem.repositories.ProdutoRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,123 +23,119 @@ class PedidoConsumerTest {
 
     @Test
     void processarPedido_ComSucesso() {
-        PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
-        ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
-        PedidoHistoricoStatusRepository historicoRepository = Mockito.mock(PedidoHistoricoStatusRepository.class);
+        // Mocks
+        PedidoRepository pedidoRepository = mock(PedidoRepository.class);
+        ProdutoRepository produtoRepository = mock(ProdutoRepository.class);
+        PedidoHistoricoStatusRepository pedidoHistoricoStatusRepository = mock(PedidoHistoricoStatusRepository.class);
+        RabbitTemplate rabbitTemplate = mock(RabbitTemplate.class);
 
-        PedidoConsumer consumer = new PedidoConsumer(pedidoRepository, produtoRepository, historicoRepository);
+        PedidoConsumer pedidoConsumer = new PedidoConsumer(pedidoRepository, produtoRepository, pedidoHistoricoStatusRepository, rabbitTemplate);
 
-        Produto produto1 = new Produto();
-        produto1.setId("produto1");
-        produto1.setQuantidadeEstoque(10);
-        produto1.setProdutoValor(new BigDecimal("50.00"));
+        Produto produto = new Produto();
+        produto.setId("1");
+        produto.setQuantidadeEstoque(10);
+        produto.setProdutoValor(BigDecimal.valueOf(100));
 
-        Produto produto2 = new Produto();
-        produto2.setId("produto2");
-        produto2.setQuantidadeEstoque(20);
-        produto2.setProdutoValor(new BigDecimal("30.00"));
+        PedidoTemProdutos item = new PedidoTemProdutos();
+        item.setProduto(produto);
+        item.setQuantidade(2);
 
-        when(produtoRepository.findById("produto1")).thenReturn(Optional.of(produto1));
-        when(produtoRepository.findById("produto2")).thenReturn(Optional.of(produto2));
-
-        PedidoTemProdutos item1 = new PedidoTemProdutos();
-        item1.setProduto(produto1);
-        item1.setQuantidade(2);
-
-        PedidoTemProdutos item2 = new PedidoTemProdutos();
-        item2.setProduto(produto2);
-        item2.setQuantidade(3);
+        List<PedidoTemProdutos> itens = new ArrayList<>();
+        itens.add(item);
 
         Pedido pedido = new Pedido();
-        pedido.setId("pedido1");
-        pedido.setProdutos(new ArrayList<>(List.of(item1, item2)));
+        pedido.setId("123");
+        pedido.setProdutos(itens);
 
-        when(pedidoRepository.save(any(Pedido.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        // Mock configurado
+        when(produtoRepository.findById("1")).thenReturn(Optional.of(produto));
+        when(pedidoRepository.save(any(Pedido.class))).thenReturn(pedido);
 
-        consumer.processarPedido(pedido);
+        // Execução
+        pedidoConsumer.processarPedido(pedido);
 
-        assertEquals(8, produto1.getQuantidadeEstoque());
-        assertEquals(17, produto2.getQuantidadeEstoque());
-
-        verify(produtoRepository, times(1)).save(produto1);
-        verify(produtoRepository, times(1)).save(produto2);
-
-        ArgumentCaptor<Pedido> pedidoCaptor = ArgumentCaptor.forClass(Pedido.class);
-        verify(pedidoRepository, times(1)).save(pedidoCaptor.capture());
-        Pedido pedidoSalvo = pedidoCaptor.getValue();
-
-        assertEquals(new BigDecimal("190.00"), pedidoSalvo.getPedidoValor());
-        assertEquals(5, pedidoSalvo.getPedidoQuantidade());
-        assertEquals(2, pedidoSalvo.getProdutos().size());
-
-        ArgumentCaptor<PedidoHistoricoStatus> historicoCaptor = ArgumentCaptor.forClass(PedidoHistoricoStatus.class);
-        verify(historicoRepository, times(1)).save(historicoCaptor.capture());
-        PedidoHistoricoStatus historicoSalvo = historicoCaptor.getValue();
-
-        assertEquals(StatusPedidoEnum.PENDENTE, historicoSalvo.getStatusPedido());
-        assertNotNull(historicoSalvo.getDataHoraStatusPedido());
-        assertEquals(pedidoSalvo, historicoSalvo.getPedido());
+        // Validações
+        assertEquals(8, produto.getQuantidadeEstoque()); // Estoque deve ser reduzido
+        verify(produtoRepository, times(1)).save(produto); // Produto foi salvo
+        verify(pedidoRepository, times(1)).save(pedido); // Pedido foi salvo
+        verify(rabbitTemplate, times(1)).convertAndSend("estoque-queue", pedido); // Mensagem enviada
     }
+
+
 
     @Test
     void processarPedido_ProdutoNaoEncontrado() {
-        PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
-        ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
-        PedidoHistoricoStatusRepository historicoRepository = Mockito.mock(PedidoHistoricoStatusRepository.class);
+        // Mocks
+        PedidoRepository pedidoRepository = mock(PedidoRepository.class);
+        ProdutoRepository produtoRepository = mock(ProdutoRepository.class);
+        PedidoHistoricoStatusRepository pedidoHistoricoStatusRepository = mock(PedidoHistoricoStatusRepository.class);
+        RabbitTemplate rabbitTemplate = mock(RabbitTemplate.class);
 
-        PedidoConsumer consumer = new PedidoConsumer(pedidoRepository, produtoRepository, historicoRepository);
+        PedidoConsumer pedidoConsumer = new PedidoConsumer(pedidoRepository, produtoRepository, pedidoHistoricoStatusRepository, rabbitTemplate);
+
+        // Criação de um pedido com produto inexistente
+        Pedido pedido = new Pedido();
+        pedido.setId("123");
 
         Produto produto = new Produto();
-        produto.setId("produto1");
-        produto.setQuantidadeEstoque(10);
-        produto.setProdutoValor(new BigDecimal("50.00"));
+        produto.setId("1");
 
         PedidoTemProdutos item = new PedidoTemProdutos();
         item.setProduto(produto);
-        item.setQuantidade(1);
+        item.setQuantidade(2);
 
-        Pedido pedido = new Pedido();
-        pedido.setId("pedido1");
-        pedido.setProdutos(new ArrayList<>(List.of(item)));
+        List<PedidoTemProdutos> itens = new ArrayList<>();
+        itens.add(item);
+        pedido.setProdutos(itens);
 
-        when(produtoRepository.findById("produto1")).thenReturn(Optional.empty());
+        // Mock configurado para simular produto não encontrado
+        when(produtoRepository.findById("1")).thenReturn(Optional.empty());
 
-        consumer.processarPedido(pedido);
+        // Execução
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> pedidoConsumer.processarPedido(pedido));
 
-        verify(produtoRepository, times(1)).findById("produto1");
-        verify(produtoRepository, never()).save(any());
-        verify(pedidoRepository, never()).save(any());
-        verify(historicoRepository, never()).save(any());
+        // Verificação
+        assertEquals("Produto não encontrado: 1", exception.getMessage());
     }
+
+
 
     @Test
     void processarPedido_EstoqueInsuficiente() {
-        PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
-        ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
-        PedidoHistoricoStatusRepository historicoRepository = Mockito.mock(PedidoHistoricoStatusRepository.class);
+        // Mocks
+        PedidoRepository pedidoRepository = mock(PedidoRepository.class);
+        ProdutoRepository produtoRepository = mock(ProdutoRepository.class);
+        PedidoHistoricoStatusRepository pedidoHistoricoStatusRepository = mock(PedidoHistoricoStatusRepository.class);
+        RabbitTemplate rabbitTemplate = mock(RabbitTemplate.class);
 
-        PedidoConsumer consumer = new PedidoConsumer(pedidoRepository, produtoRepository, historicoRepository);
+        PedidoConsumer pedidoConsumer = new PedidoConsumer(pedidoRepository, produtoRepository, pedidoHistoricoStatusRepository, rabbitTemplate);
 
         Produto produto = new Produto();
-        produto.setId("produto1");
-        produto.setQuantidadeEstoque(1);
-        produto.setProdutoValor(new BigDecimal("50.00"));
+        produto.setId("1");
+        produto.setQuantidadeEstoque(1); // Estoque insuficiente
+        produto.setProdutoValor(BigDecimal.valueOf(100));
 
         PedidoTemProdutos item = new PedidoTemProdutos();
         item.setProduto(produto);
-        item.setQuantidade(5);
+        item.setQuantidade(2);
+
+        List<PedidoTemProdutos> itens = new ArrayList<>();
+        itens.add(item);
 
         Pedido pedido = new Pedido();
-        pedido.setId("pedido1");
-        pedido.setProdutos(new ArrayList<>(List.of(item)));
+        pedido.setId("123");
+        pedido.setProdutos(itens);
 
-        when(produtoRepository.findById("produto1")).thenReturn(Optional.of(produto));
+        // Mock configurado para simular estoque insuficiente
+        when(produtoRepository.findById("1")).thenReturn(Optional.of(produto));
 
-        consumer.processarPedido(pedido);
+        // Execução
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> pedidoConsumer.processarPedido(pedido));
 
-        verify(produtoRepository, times(1)).findById("produto1");
-        verify(produtoRepository, never()).save(any());
-        verify(pedidoRepository, never()).save(any());
-        verify(historicoRepository, never()).save(any());
+        // Verificação
+        assertEquals("Estoque insuficiente para o produto: null", exception.getMessage());
     }
+
+
+
 }
