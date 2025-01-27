@@ -7,6 +7,8 @@ import com.accenture.shopsystem.services.produto.ProdutoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,13 +30,13 @@ class ProdutoControllerTest {
         requestDTO.setQuantidadeEstoque(10);
 
         RedirectView redirectView = new RedirectView("/produtos/adicionar");
-        when(produtoService.adicionarProduto(requestDTO)).thenReturn(redirectView);
+        when(produtoService.adicionarProduto(eq(requestDTO), any())).thenReturn(redirectView);
 
-        RedirectView response = produtoController.adicionarProduto(requestDTO);
+        RedirectView response = produtoController.adicionarProduto(requestDTO, mock(org.springframework.web.servlet.mvc.support.RedirectAttributes.class));
 
         assertNotNull(response);
         assertEquals("/produtos/adicionar", response.getUrl());
-        verify(produtoService, times(1)).adicionarProduto(requestDTO);
+        verify(produtoService, times(1)).adicionarProduto(eq(requestDTO), any());
     }
 
     @Test

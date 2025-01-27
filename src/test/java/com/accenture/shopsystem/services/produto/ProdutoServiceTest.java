@@ -15,6 +15,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.util.Collections;
 import java.util.Optional;
@@ -63,7 +65,7 @@ class ProdutoServiceTest {
         when(vendedorRepository.findByEmail("vendedor@example.com")).thenReturn(Optional.of(vendedor));
         when(produtoRepository.save(any(Produto.class))).thenReturn(new Produto());
 
-        RedirectView redirectView = produtoService.adicionarProduto(produtoRequestDTO);
+        RedirectView redirectView = produtoService.adicionarProduto(produtoRequestDTO, mock(RedirectAttributes.class));
 
         assertNotNull(redirectView);
         assertEquals("/produtos/adicionar", redirectView.getUrl());
@@ -83,7 +85,7 @@ class ProdutoServiceTest {
 
         when(vendedorRepository.findByEmail("vendedor@example.com")).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> produtoService.adicionarProduto(produtoRequestDTO));
+        assertThrows(RuntimeException.class, () -> produtoService.adicionarProduto(produtoRequestDTO, mock(RedirectAttributes.class)));
         verify(produtoRepository, never()).save(any(Produto.class));
     }
 
@@ -134,3 +136,4 @@ class ProdutoServiceTest {
         verify(produtoRepository, times(1)).findByVendedorId("vendedor123");
     }
 }
+
