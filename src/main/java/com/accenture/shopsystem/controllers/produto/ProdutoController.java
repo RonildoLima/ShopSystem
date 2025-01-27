@@ -10,6 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
+
+
 @RestController
 @RequestMapping
 @Tag(name = "Produtos")
@@ -23,8 +27,13 @@ public class ProdutoController {
 
     @PostMapping("/produtos/adicionar")
     @Operation(summary = "Adicionar produto", description = "Método para salvar um novo produto")
-    public RedirectView adicionarProduto(@ModelAttribute ProdutoRequestDTO produtoRequestDTO) {
-        return produtoService.adicionarProduto(produtoRequestDTO);
+    public RedirectView adicionarProduto(
+            @ModelAttribute ProdutoRequestDTO produtoRequestDTO,
+            RedirectAttributes redirectAttributes
+    ) {
+        RedirectView redirectView = produtoService.adicionarProduto(produtoRequestDTO, redirectAttributes);
+        redirectAttributes.addFlashAttribute("successMessage", "Produto adicionado com sucesso!");
+        return redirectView;
     }
 
     @DeleteMapping("{vendedorId}/produtos/{produtoId}")
