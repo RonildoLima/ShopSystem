@@ -1,7 +1,7 @@
 package com.accenture.shopsystem.controllers.pedidoHistoricoStatus;
 
-import com.accenture.shopsystem.domain.PedidoHistoricoStatus.PedidoHistoricoStatus;
 import com.accenture.shopsystem.services.pedidoHistoricoStatus.PedidoHistoricoStatusService;
+import com.accenture.shopsystem.repositories.VendedorRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
 @RequestMapping("/pedidoHistoricoStatus")
@@ -16,52 +17,33 @@ import org.springframework.web.bind.annotation.*;
 public class PedidoHistoricoStatusController {
 
     private final PedidoHistoricoStatusService pedidoHistoricoStatusService;
+    private final VendedorRepository vendedorRepository;
 
-    public PedidoHistoricoStatusController(PedidoHistoricoStatusService pedidoHistoricoStatusService) {
+    public PedidoHistoricoStatusController(PedidoHistoricoStatusService pedidoHistoricoStatusService, VendedorRepository vendedorRepository) {
         this.pedidoHistoricoStatusService = pedidoHistoricoStatusService;
+        this.vendedorRepository = vendedorRepository;
     }
 
-    @Operation(summary = "Salvar novo status", description = "Método para salvar um novo histórico de status do pedido")
-    @PostMapping
-    public ResponseEntity<PedidoHistoricoStatus> salvarHistorico(@RequestBody PedidoHistoricoStatus pedidoHistoricoStatus) {
+    @Operation(summary = "Processar ou cancelar pedido", description = "Atualiza o status do pedido com base no ID do vendedor autenticado")
+    @PostMapping("/processar")
+    public void processarPedido(@RequestParam String pedidoId, @RequestParam String acao) {
         try {
-            PedidoHistoricoStatus salvo = pedidoHistoricoStatusService.salvarHistorico(pedidoHistoricoStatus);
-            return ResponseEntity.ok(salvo);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            String email;
+            if (authentication.getPrincipal() instanceof DefaultOAuth2User user) {
+                email = (String) user.getAttributes().get("email");
+            } else {
+                email = authentication.getName();
+            }
+
+            String vendedorId = vendedorRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Vendedor não encontrado para o email: " + email))
+                    .getId();
+
+            pedidoHistoricoStatusService.processarPedido(pedidoId, vendedorId, acao);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+            System.err.println("Erro ao processar pedido: " + e.getMessage());
         }
     }
-
-    @GetMapping
-    @Operation(summary = "Listar status", description = "Método para listar todos os históricos de status")
-    public ResponseEntity<Iterable<PedidoHistoricoStatus>> listarHistoricos() {
-        Iterable<PedidoHistoricoStatus> historicos = pedidoHistoricoStatusService.listarHistoricos();
-        return ResponseEntity.ok(historicos);
-    }
-
-    @Operation(summary = "Buscar status", description = "Método para buscar um histórico específico pelo ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<PedidoHistoricoStatus> buscarPorId(@PathVariable String id) {
-        try {
-            PedidoHistoricoStatus historico = pedidoHistoricoStatusService.buscarPorId(id);
-            return ResponseEntity.ok(historico);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping("/{vendedorId}/pedido/{pedidoId}/atualizar")
-    @Operation(summary = "Atualizar status do pedido", description = "Envia o pedido para a fila para atualização do status")
-    public ResponseEntity<Void> enviarPedidoParaFila(
-            @PathVariable String vendedorId,
-            @PathVariable String pedidoId
-    ) {
-        try {
-            pedidoHistoricoStatusService.enviarParaFila(pedidoId, vendedorId);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
 }

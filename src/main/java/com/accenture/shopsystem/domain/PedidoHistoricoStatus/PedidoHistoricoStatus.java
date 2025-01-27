@@ -4,6 +4,7 @@ import com.accenture.shopsystem.domain.Pedido.Pedido;
 import com.accenture.shopsystem.domain.Enums.StatusPedidoEnum;
 import jakarta.persistence.*;
 import lombok.*;
+import java.io.Serializable;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PedidoHistoricoStatus {
+public class PedidoHistoricoStatus implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
