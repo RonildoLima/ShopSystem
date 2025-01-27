@@ -2,26 +2,16 @@ package com.accenture.shopsystem.controllers.pedido;
 
 import com.accenture.shopsystem.domain.Pedido.Pedido;
 import com.accenture.shopsystem.domain.PedidoTemProdutos.PedidoTemProdutos;
-import com.accenture.shopsystem.domain.Produto.Produto;
 import com.accenture.shopsystem.domain.Vendedor.Vendedor;
-import com.accenture.shopsystem.dtos.pedido.PedidoRequestDTO;
-import com.accenture.shopsystem.services.pedido.PedidoService;
 import com.accenture.shopsystem.repositories.PedidoRepository;
 import com.accenture.shopsystem.repositories.ProdutoRepository;
 import com.accenture.shopsystem.repositories.VendedorRepository;
-import com.accenture.shopsystem.producers.pedido.PedidoProducer;
+import com.accenture.shopsystem.services.pedido.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -34,8 +24,6 @@ public class PedidoController {
     ProdutoRepository produtoRepository;
     @Autowired
     VendedorRepository vendedorRepository;
-    @Autowired
-    PedidoProducer pedidoProducer;
     @Autowired
     PedidoService pedidoService;
 
