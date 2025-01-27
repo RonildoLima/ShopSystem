@@ -36,6 +36,8 @@ public class OAuth2LoginController {
             String generatedPassword = UUID.randomUUID().toString().substring(0, 8);
             vendedor.setPassword(new BCryptPasswordEncoder().encode(generatedPassword));
             vendedor.setVendedorSetor("Serviços");
+
+            vendedorRepository.save(vendedor);
         }
         return new RedirectView("/");
     }
