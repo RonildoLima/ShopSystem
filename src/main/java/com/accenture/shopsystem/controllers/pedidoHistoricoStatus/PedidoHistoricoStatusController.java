@@ -5,6 +5,9 @@ import com.accenture.shopsystem.services.pedidoHistoricoStatus.PedidoHistoricoSt
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,4 +49,19 @@ public class PedidoHistoricoStatusController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{vendedorId}/pedido/{pedidoId}/atualizar")
+    @Operation(summary = "Atualizar status do pedido", description = "Envia o pedido para a fila para atualização do status")
+    public ResponseEntity<Void> enviarPedidoParaFila(
+            @PathVariable String vendedorId,
+            @PathVariable String pedidoId
+    ) {
+        try {
+            pedidoHistoricoStatusService.enviarParaFila(pedidoId, vendedorId);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }

@@ -14,10 +14,12 @@ public class RabbitMqConfig {
 
     public static final String PEDIDO_QUEUE = "pedido-queue";
     public static final String ESTOQUE_QUEUE = "estoque-queue";
+    public static final String STATUS_QUEUE = "status-queue"; // Nova fila para status
     public static final String EXCHANGE_NAME = "pedido-exchange";
     public static final String EXCHANGE_PEDIDOS = "pedidos";
     public static final String PEDIDO_ROUTING_KEY = "pedido.routingkey";
     public static final String ESTOQUE_ROUTING_KEY = "estoque.routingkey";
+    public static final String STATUS_ROUTING_KEY = "status.routingkey"; // Routing key para status
 
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -39,6 +41,12 @@ public class RabbitMqConfig {
         return new Queue(ESTOQUE_QUEUE, true); // Fila durável
     }
 
+    // Fila para status
+    @Bean
+    public Queue statusQueue() {
+        return new Queue(STATUS_QUEUE, true); // Fila durável
+    }
+
     // Exchange do tipo Topic
     @Bean
     public TopicExchange exchange() {
@@ -55,6 +63,12 @@ public class RabbitMqConfig {
     @Bean
     public Binding estoqueBinding(Queue estoqueQueue, TopicExchange exchange) {
         return BindingBuilder.bind(estoqueQueue).to(exchange).with(ESTOQUE_ROUTING_KEY);
+    }
+
+    // Binding para a fila de status
+    @Bean
+    public Binding statusBinding(Queue statusQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(statusQueue).to(exchange).with(STATUS_ROUTING_KEY);
     }
 
     // Conversor de mensagens para JSON

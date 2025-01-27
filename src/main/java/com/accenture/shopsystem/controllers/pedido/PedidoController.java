@@ -51,7 +51,7 @@ public class PedidoController {
                     .orElseThrow (() -> new RuntimeException ("Produto não encontrado: " + item.getProduto ().getId ()));
         }
 
-        pedidoProducer.enviarPedido (pedido);
+        pedidoService.enviarPedido (pedido);
         return ResponseEntity.ok ("Pedido enviado para processamento!");
     }
     @Operation(summary = "Deletar pedido", description = "Deletar um pedido do banco de dados")

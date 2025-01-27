@@ -3,11 +3,20 @@ package com.accenture.shopsystem.services.pedido;
 import com.accenture.shopsystem.domain.Pedido.Pedido;
 import com.accenture.shopsystem.repositories.PedidoHistoricoStatusRepository;
 import com.accenture.shopsystem.repositories.PedidoRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PedidoService {
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Value("${rabbitmq.queue.pedido}")
+    private String pedidoQueue;
 
     private final PedidoRepository pedidoRepository;
     private final PedidoHistoricoStatusRepository pedidoHistoricoStatusRepository;
@@ -27,5 +36,11 @@ public class PedidoService {
 
         pedidoHistoricoStatusRepository.deleteByPedido(pedido);
         pedidoRepository.delete(pedido);
+    }
+
+    public void enviarPedido(Pedido pedido) {
+        // Envia o pedido para a fila do RabbitMQ
+        rabbitTemplate.convertAndSend(pedidoQueue, pedido);
+        System.out.println("Pedido enviado para a fila: " + pedidoQueue + " - Pedido ID: " + pedido.getId());
     }
 }
