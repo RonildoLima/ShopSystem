@@ -2,10 +2,10 @@ package com.accenture.shopsystem.controllers.pedido;
 
 import com.accenture.shopsystem.controllers.pedido.PedidoController;
 import com.accenture.shopsystem.domain.Pedido.Pedido;
+import com.accenture.shopsystem.services.pedido.PedidoService;
 import com.accenture.shopsystem.domain.PedidoTemProdutos.PedidoTemProdutos;
 import com.accenture.shopsystem.domain.Produto.Produto;
 import com.accenture.shopsystem.domain.Vendedor.Vendedor;
-import com.accenture.shopsystem.producers.pedido.PedidoProducer;
 import com.accenture.shopsystem.repositories.PedidoRepository;
 import com.accenture.shopsystem.repositories.ProdutoRepository;
 import com.accenture.shopsystem.repositories.VendedorRepository;
@@ -27,14 +27,14 @@ class PedidoControllerTest {
         PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
         ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
         VendedorRepository vendedorRepository = Mockito.mock(VendedorRepository.class);
-        PedidoProducer pedidoProducer = Mockito.mock(PedidoProducer.class);
+        PedidoService pedidoService = Mockito.mock(PedidoService.class);
 
         // Instancia o controller com os mocks
         PedidoController controller = new PedidoController();
         controller.pedidoRepository = pedidoRepository;
         controller.produtoRepository = produtoRepository;
         controller.vendedorRepository = vendedorRepository;
-        controller.pedidoProducer = pedidoProducer;
+        controller.pedidoService = pedidoService;
 
         // Cria um vendedor simulado
         Vendedor vendedor = new Vendedor();
@@ -77,7 +77,7 @@ class PedidoControllerTest {
         assertEquals(vendedor, pedido.getVendedor());
 
         // Verifica que o pedido foi enviado para o RabbitMQ
-        verify(pedidoProducer, times(1)).enviarPedido(pedido);
+        verify(pedidoService, times(1)).enviarPedido(pedido);
 
         // Verifica que os métodos do repositório foram chamados
         verify(vendedorRepository, times(1)).findById("vendedor1");
@@ -90,13 +90,13 @@ class PedidoControllerTest {
         PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
         ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
         VendedorRepository vendedorRepository = Mockito.mock(VendedorRepository.class);
-        PedidoProducer pedidoProducer = Mockito.mock(PedidoProducer.class);
+        PedidoService pedidoService = Mockito.mock(PedidoService.class);
 
         PedidoController controller = new PedidoController();
         controller.pedidoRepository = pedidoRepository;
         controller.produtoRepository = produtoRepository;
         controller.vendedorRepository = vendedorRepository;
-        controller.pedidoProducer = pedidoProducer;
+        controller.pedidoService = pedidoService;
 
         Pedido pedido = new Pedido();
 
@@ -106,7 +106,7 @@ class PedidoControllerTest {
         assertEquals("Vendedor não encontrado: vendedor1", exception.getMessage());
 
         verify(vendedorRepository, times(1)).findById("vendedor1");
-        verify(pedidoProducer, never()).enviarPedido(any());
+        verify(pedidoService, never()).enviarPedido(any());
     }
 
     @Test
@@ -114,13 +114,13 @@ class PedidoControllerTest {
         PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
         ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
         VendedorRepository vendedorRepository = Mockito.mock(VendedorRepository.class);
-        PedidoProducer pedidoProducer = Mockito.mock(PedidoProducer.class);
+        PedidoService pedidoService = Mockito.mock(PedidoService.class);
 
         PedidoController controller = new PedidoController();
         controller.pedidoRepository = pedidoRepository;
         controller.produtoRepository = produtoRepository;
         controller.vendedorRepository = vendedorRepository;
-        controller.pedidoProducer = pedidoProducer;
+        controller.pedidoService = pedidoService;
 
         Vendedor vendedor = new Vendedor();
         vendedor.setId("vendedor1");
@@ -144,6 +144,6 @@ class PedidoControllerTest {
 
         verify(vendedorRepository, times(1)).findById("vendedor1");
         verify(produtoRepository, times(1)).findById("produto1");
-        verify(pedidoProducer, never()).enviarPedido(any());
+        verify(pedidoService, never()).enviarPedido(any());
     }
 }
