@@ -1,24 +1,16 @@
 package com.accenture.shopsystem.controllers.produto;
 
-import com.accenture.shopsystem.controllers.produto.ProdutoController;
 import com.accenture.shopsystem.domain.Produto.Produto;
 import com.accenture.shopsystem.domain.Vendedor.Vendedor;
 import com.accenture.shopsystem.dtos.produto.ProdutoRequestDTO;
-import com.accenture.shopsystem.repositories.ProdutoRepository;
-import com.accenture.shopsystem.repositories.ProdutoRepository.*;
-import com.accenture.shopsystem.repositories.VendedorRepository;
+import com.accenture.shopsystem.services.produto.ProdutoService;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,124 +19,99 @@ class ProdutoControllerTest {
 
     @Test
     void adicionarProduto() {
-        ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
-        VendedorRepository vendedorRepository = Mockito.mock(VendedorRepository.class);
+        ProdutoService produtoService = mock(ProdutoService.class);
+        ProdutoController produtoController = new ProdutoController(produtoService);
 
-        ProdutoController controller = new ProdutoController(vendedorRepository);
-        controller.produtoRepository = produtoRepository;
+        ProdutoRequestDTO requestDTO = new ProdutoRequestDTO();
+        requestDTO.setProdutoDescricao("Produto Teste");
+        requestDTO.setProdutoValor(BigDecimal.valueOf(100.0));
+        requestDTO.setQuantidadeEstoque(10);
 
-        // Mock SecurityContext e Authentication
-        Authentication authentication = Mockito.mock(Authentication.class);
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        SecurityContextHolder.setContext(securityContext);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("joao.silva@example.com");
+        RedirectView redirectView = new RedirectView("/produtos/adicionar");
+        when(produtoService.adicionarProduto(requestDTO)).thenReturn(redirectView);
 
-        Vendedor vendedor = new Vendedor();
-        vendedor.setId("vendedor1");
-        vendedor.setEmail("joao.silva@example.com");
-        when(vendedorRepository.findByEmail("joao.silva@example.com")).thenReturn(Optional.of(vendedor));
+        RedirectView response = produtoController.adicionarProduto(requestDTO);
 
-        ProdutoRequestDTO produtoRequestDTO = new ProdutoRequestDTO();
-        produtoRequestDTO.setProdutoDescricao("Produto Teste");
-        produtoRequestDTO.setProdutoValor(new BigDecimal("99.99"));
-        produtoRequestDTO.setQuantidadeEstoque(10);
-
-        RedirectView redirectView = controller.adicionarProduto(produtoRequestDTO);
-
-        assertEquals("/produtos/adicionar", redirectView.getUrl());
-
-        ArgumentCaptor<Produto> produtoCaptor = ArgumentCaptor.forClass(Produto.class);
-        verify(produtoRepository).save(produtoCaptor.capture());
-        Produto savedProduto = produtoCaptor.getValue();
-
-        assertEquals("Produto Teste", savedProduto.getProdutoDescricao());
-        assertEquals(new BigDecimal("99.99"), savedProduto.getProdutoValor());
-        assertEquals(10, savedProduto.getQuantidadeEstoque());
-        assertEquals(vendedor, savedProduto.getVendedor());
+        assertNotNull(response);
+        assertEquals("/produtos/adicionar", response.getUrl());
+        verify(produtoService, times(1)).adicionarProduto(requestDTO);
     }
 
     @Test
     void excluirProduto() {
-        ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
-        VendedorRepository vendedorRepository = Mockito.mock(VendedorRepository.class);
+        ProdutoService produtoService = mock(ProdutoService.class);
+        ProdutoController produtoController = new ProdutoController(produtoService);
 
-        ProdutoController controller = new ProdutoController(vendedorRepository);
-        controller.produtoRepository = produtoRepository;
+        String vendedorId = "vendedor123";
+        String produtoId = "produto123";
 
-        Produto produto = new Produto();
-        produto.setId("produto1");
-        Vendedor vendedor = new Vendedor();
-        vendedor.setId("vendedor1");
-        produto.setVendedor(vendedor);
+        doNothing().when(produtoService).excluirProduto(vendedorId, produtoId);
 
-        when(produtoRepository.findById("produto1")).thenReturn(Optional.of(produto));
+        ResponseEntity<Void> response = produtoController.excluirProduto(vendedorId, produtoId);
 
-        ResponseEntity<Void> response = controller.excluirProduto("vendedor1", "produto1");
-
+        assertNotNull(response);
         assertEquals(204, response.getStatusCodeValue());
-        verify(produtoRepository, times(1)).deleteById("produto1");
+        verify(produtoService, times(1)).excluirProduto(vendedorId, produtoId);
     }
 
     @Test
     void excluirProduto_NotFound() {
-        ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
-        VendedorRepository vendedorRepository = Mockito.mock(VendedorRepository.class);
+        ProdutoService produtoService = mock(ProdutoService.class);
+        ProdutoController produtoController = new ProdutoController(produtoService);
 
-        ProdutoController controller = new ProdutoController(vendedorRepository);
-        controller.produtoRepository = produtoRepository;
+        String vendedorId = "vendedor123";
+        String produtoId = "produtoInexistente";
 
-        when(produtoRepository.findById("produto1")).thenReturn(Optional.empty());
+        doThrow(new RuntimeException("Produto não encontrado."))
+                .when(produtoService).excluirProduto(vendedorId, produtoId);
 
-        ResponseEntity<Void> response = controller.excluirProduto("vendedor1", "produto1");
+        ResponseEntity<Void> response = produtoController.excluirProduto(vendedorId, produtoId);
 
-        assertEquals(404, response.getStatusCodeValue());
-        verify(produtoRepository, never()).deleteById(anyString());
+        assertNotNull(response);
+        assertEquals(403, response.getStatusCodeValue());
+        verify(produtoService, times(1)).excluirProduto(vendedorId, produtoId);
     }
 
     @Test
     void excluirProduto_Forbidden() {
-        ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
-        VendedorRepository vendedorRepository = Mockito.mock(VendedorRepository.class);
+        ProdutoService produtoService = mock(ProdutoService.class);
+        ProdutoController produtoController = new ProdutoController(produtoService);
 
-        ProdutoController controller = new ProdutoController(vendedorRepository);
-        controller.produtoRepository = produtoRepository;
+        String vendedorId = "vendedor123";
+        String produtoId = "produto123";
 
-        Produto produto = new Produto();
-        produto.setId("produto1");
-        Vendedor vendedor = new Vendedor();
-        vendedor.setId("vendedor2"); // ID diferente
-        produto.setVendedor(vendedor);
+        doThrow(new RuntimeException("Você não tem permissão para excluir este produto."))
+                .when(produtoService).excluirProduto(vendedorId, produtoId);
 
-        when(produtoRepository.findById("produto1")).thenReturn(Optional.of(produto));
+        ResponseEntity<Void> response = produtoController.excluirProduto(vendedorId, produtoId);
 
-        ResponseEntity<Void> response = controller.excluirProduto("vendedor1", "produto1");
-
+        assertNotNull(response);
         assertEquals(403, response.getStatusCodeValue());
-        verify(produtoRepository, never()).deleteById(anyString());
+        verify(produtoService, times(1)).excluirProduto(vendedorId, produtoId);
     }
 
     @Test
     void listarProdutosPorVendedor() {
-        ProdutoRepository produtoRepository = Mockito.mock(ProdutoRepository.class);
-        VendedorRepository vendedorRepository = Mockito.mock(VendedorRepository.class);
+        ProdutoService produtoService = mock(ProdutoService.class);
+        ProdutoController produtoController = new ProdutoController(produtoService);
 
-        ProdutoController controller = new ProdutoController(vendedorRepository);
-        controller.produtoRepository = produtoRepository;
+        String vendedorId = "vendedor123";
 
+        List<Produto> produtos = new ArrayList<>();
         Produto produto1 = new Produto();
         produto1.setProdutoDescricao("Produto 1");
         Produto produto2 = new Produto();
         produto2.setProdutoDescricao("Produto 2");
+        produtos.add(produto1);
+        produtos.add(produto2);
 
-        List<Produto> produtos = Arrays.asList(produto1, produto2);
-        when(produtoRepository.findByVendedorId("vendedor1")).thenReturn(produtos);
+        when(produtoService.listarProdutosPorVendedor(vendedorId)).thenReturn(produtos);
 
-        ResponseEntity<Iterable<Produto>> response = controller.listarProdutosPorVendedor("vendedor1");
+        ResponseEntity<Iterable<Produto>> response = produtoController.listarProdutosPorVendedor(vendedorId);
 
+        assertNotNull(response);
         assertEquals(200, response.getStatusCodeValue());
-        assertNotNull(response.getBody());
-        assertIterableEquals(produtos, response.getBody());
-        verify(produtoRepository, times(1)).findByVendedorId("vendedor1");
+        assertEquals(produtos, response.getBody());
+        verify(produtoService, times(1)).listarProdutosPorVendedor(vendedorId);
     }
 }

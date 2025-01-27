@@ -1,16 +1,12 @@
 package com.accenture.shopsystem.controllers.pedidoHistoricoStatus;
 
-import com.accenture.shopsystem.controllers.pedidoHistoricoStatus.PedidoHistoricoStatusController;
 import com.accenture.shopsystem.domain.Pedido.Pedido;
 import com.accenture.shopsystem.domain.PedidoHistoricoStatus.PedidoHistoricoStatus;
-import com.accenture.shopsystem.repositories.PedidoHistoricoStatusRepository;
-import com.accenture.shopsystem.repositories.PedidoRepository;
+import com.accenture.shopsystem.services.pedidoHistoricoStatus.PedidoHistoricoStatusService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,104 +15,92 @@ class PedidoHistoricoStatusControllerTest {
 
     @Test
     void salvarHistorico() {
-        PedidoHistoricoStatusRepository historicoRepository = Mockito.mock(PedidoHistoricoStatusRepository.class);
-        PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
-        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController();
-        controller.pedidoHistoricoStatusRepository = historicoRepository;
-        controller.pedidoRepository = pedidoRepository;
+        PedidoHistoricoStatusService service = mock(PedidoHistoricoStatusService.class);
+        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController(service);
 
         Pedido pedido = new Pedido();
-        pedido.setId("pedido1");
+        pedido.setId("1");
 
         PedidoHistoricoStatus historico = new PedidoHistoricoStatus();
         historico.setPedido(pedido);
+        historico.setDataHoraStatusPedido(LocalDateTime.now());
 
-        when(pedidoRepository.findById("pedido1")).thenReturn(Optional.of(pedido));
-        when(historicoRepository.save(historico)).thenReturn(historico);
+        when(service.salvarHistorico(any(PedidoHistoricoStatus.class))).thenReturn(historico);
 
         ResponseEntity<PedidoHistoricoStatus> response = controller.salvarHistorico(historico);
 
+        assertNotNull(response);
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(historico, response.getBody());
-        verify(historicoRepository, times(1)).save(historico);
+        verify(service, times(1)).salvarHistorico(historico);
     }
 
     @Test
     void salvarHistorico_PedidoNaoEncontrado() {
-        PedidoHistoricoStatusRepository historicoRepository = Mockito.mock(PedidoHistoricoStatusRepository.class);
-        PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
-        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController();
-        controller.pedidoHistoricoStatusRepository = historicoRepository;
-        controller.pedidoRepository = pedidoRepository;
+        PedidoHistoricoStatusService service = mock(PedidoHistoricoStatusService.class);
+        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController(service);
 
         Pedido pedido = new Pedido();
-        pedido.setId("pedido1");
+        pedido.setId("1");
 
         PedidoHistoricoStatus historico = new PedidoHistoricoStatus();
         historico.setPedido(pedido);
 
-        when(pedidoRepository.findById("pedido1")).thenReturn(Optional.empty());
+        when(service.salvarHistorico(any(PedidoHistoricoStatus.class)))
+                .thenThrow(new IllegalArgumentException("Pedido não encontrado"));
 
         ResponseEntity<PedidoHistoricoStatus> response = controller.salvarHistorico(historico);
 
+        assertNotNull(response);
         assertEquals(400, response.getStatusCodeValue());
-        verify(historicoRepository, never()).save(any());
+        verify(service, times(1)).salvarHistorico(historico);
     }
 
     @Test
     void listarHistoricos() {
-        PedidoHistoricoStatusRepository historicoRepository = Mockito.mock(PedidoHistoricoStatusRepository.class);
-        PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
-        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController();
-        controller.pedidoHistoricoStatusRepository = historicoRepository;
-        controller.pedidoRepository = pedidoRepository;
+        PedidoHistoricoStatusService service = mock(PedidoHistoricoStatusService.class);
+        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController(service);
 
-        PedidoHistoricoStatus historico1 = new PedidoHistoricoStatus();
-        PedidoHistoricoStatus historico2 = new PedidoHistoricoStatus();
-
-        when(historicoRepository.findAll()).thenReturn(java.util.List.of(historico1, historico2));
+        Iterable<PedidoHistoricoStatus> historicos = mock(Iterable.class);
+        when(service.listarHistoricos()).thenReturn(historicos);
 
         ResponseEntity<Iterable<PedidoHistoricoStatus>> response = controller.listarHistoricos();
 
+        assertNotNull(response);
         assertEquals(200, response.getStatusCodeValue());
-        assertNotNull(response.getBody());
-        assertTrue(response.getBody().iterator().hasNext());
-        verify(historicoRepository, times(1)).findAll();
+        assertEquals(historicos, response.getBody());
+        verify(service, times(1)).listarHistoricos();
     }
 
     @Test
     void buscarPorId() {
-        PedidoHistoricoStatusRepository historicoRepository = Mockito.mock(PedidoHistoricoStatusRepository.class);
-        PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
-        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController();
-        controller.pedidoHistoricoStatusRepository = historicoRepository;
-        controller.pedidoRepository = pedidoRepository;
+        PedidoHistoricoStatusService service = mock(PedidoHistoricoStatusService.class);
+        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController(service);
 
         PedidoHistoricoStatus historico = new PedidoHistoricoStatus();
-        historico.setId("historico1");
+        historico.setId("1");
 
-        when(historicoRepository.findById("historico1")).thenReturn(Optional.of(historico));
+        when(service.buscarPorId("1")).thenReturn(historico);
 
-        ResponseEntity<PedidoHistoricoStatus> response = controller.buscarPorId("historico1");
+        ResponseEntity<PedidoHistoricoStatus> response = controller.buscarPorId("1");
 
+        assertNotNull(response);
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(historico, response.getBody());
-        verify(historicoRepository, times(1)).findById("historico1");
+        verify(service, times(1)).buscarPorId("1");
     }
 
     @Test
     void buscarPorId_NotFound() {
-        PedidoHistoricoStatusRepository historicoRepository = Mockito.mock(PedidoHistoricoStatusRepository.class);
-        PedidoRepository pedidoRepository = Mockito.mock(PedidoRepository.class);
-        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController();
-        controller.pedidoHistoricoStatusRepository = historicoRepository;
-        controller.pedidoRepository = pedidoRepository;
+        PedidoHistoricoStatusService service = mock(PedidoHistoricoStatusService.class);
+        PedidoHistoricoStatusController controller = new PedidoHistoricoStatusController(service);
 
-        when(historicoRepository.findById("historico1")).thenReturn(Optional.empty());
+        when(service.buscarPorId("1")).thenThrow(new IllegalArgumentException("Histórico não encontrado"));
 
-        ResponseEntity<PedidoHistoricoStatus> response = controller.buscarPorId("historico1");
+        ResponseEntity<PedidoHistoricoStatus> response = controller.buscarPorId("1");
 
+        assertNotNull(response);
         assertEquals(404, response.getStatusCodeValue());
-        verify(historicoRepository, times(1)).findById("historico1");
+        verify(service, times(1)).buscarPorId("1");
     }
 }
