@@ -87,6 +87,12 @@
     <div class="card shadow">
         <div class="card-body">
             <h1 class="text-center mb-4" style="color: #4CAF50;">Adicionar Produto</h1>
+
+            <!-- Mensagem de Sucesso -->
+            <div th:if="${successMessage}" class="alert alert-success text-center" role="alert">
+                <p th:text="${successMessage}"></p>
+            </div>
+
             <form th:action="@{/produtos/adicionar}" method="post" class="mt-4">
                 <!-- Nome do Produto -->
                 <div class="mb-3">

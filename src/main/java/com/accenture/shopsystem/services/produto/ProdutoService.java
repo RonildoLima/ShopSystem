@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +27,7 @@ public class ProdutoService {
         this.vendedorRepository = vendedorRepository;
     }
 
-    public RedirectView adicionarProduto(ProdutoRequestDTO produtoRequestDTO) {
+    public RedirectView adicionarProduto(ProdutoRequestDTO produtoRequestDTO, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email;
 
@@ -57,6 +58,8 @@ public class ProdutoService {
         System.out.println("Produto adicionado com sucesso: " + produto.getProdutoDescricao()
                 + ", Valor: " + produto.getProdutoValor()
                 + ", Estoque: " + produto.getQuantidadeEstoque());
+
+        redirectAttributes.addFlashAttribute("successMessage", "Produto adicionado com sucesso!");
 
         return new RedirectView("/produtos/adicionar");
     }
