@@ -91,7 +91,6 @@ public class PedidoConsumer {
 
             pedidoHistoricoStatusRepository.save(historicoStatus);
 
-            // Enviar dados para a fila estoque-queue
             rabbitTemplate.convertAndSend("estoque-queue", pedido);
 
             System.out.println("Pedido processado com sucesso: " + pedidoSalvo.getId());
