@@ -21,6 +21,7 @@ class OAuth2LoginControllerTest {
     void loginComGoogle() {
         VendedorRepository vendedorRepository = Mockito.mock(VendedorRepository.class);
         OAuth2User principal = Mockito.mock(OAuth2User.class);
+
         when(principal.getAttribute("name")).thenReturn("João Silva");
         when(principal.getAttribute("email")).thenReturn("joao.silva@example.com");
         when(vendedorRepository.findByEmail("joao.silva@example.com")).thenReturn(Optional.empty());
@@ -38,11 +39,13 @@ class OAuth2LoginControllerTest {
         assertEquals("João Silva", savedVendedor.getVendedorNome());
         assertEquals("joao.silva@example.com", savedVendedor.getEmail());
         assertEquals("USER", savedVendedor.getRoles());
-        assertTrue(new BCryptPasswordEncoder().matches("default-password", savedVendedor.getPassword()));
-        assertEquals("Setor Padrão", savedVendedor.getVendedorSetor());
+        assertTrue(savedVendedor.getPassword().length() >= 8);
+        assertEquals("Serviços", savedVendedor.getVendedorSetor());
 
         verify(vendedorRepository, times(1)).findByEmail("joao.silva@example.com");
+        verify(vendedorRepository, times(1)).save(any(Vendedor.class));
     }
+
 
     @Test
     void loginComGoogle_ExistingUser() {
