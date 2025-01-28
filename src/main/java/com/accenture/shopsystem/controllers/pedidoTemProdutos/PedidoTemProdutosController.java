@@ -7,5 +7,4 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/pedidos")
 @Tag(name = "Produto dos pedidos")
 public class PedidoTemProdutosController {
-
 }
