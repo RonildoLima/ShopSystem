@@ -65,23 +65,23 @@ run ShopSystemApplication
   </tr>
   <tr>
     <td><kbd>POST /pedidos/{vendedorId}</kbd></td>
-    <td><a href="#">Insert order</a></td>
+    <td><a href="#insert-order">Insert order</a></td>
   </tr>
   <tr>
     <td><kbd>DELETE /pedidos/{pedidoId}/vendedor/{vendedorId}</kbd></td>
-    <td><a href="#">Delete order</a></td>
+    <td><a href="#delete-order">Delete order</a></td>
   </tr>
   <tr>
     <td><kbd>POST /produtos/adicionar</kbd></td>
-    <td><a href="#">Add product</a></td>
+    <td><a href="#insert-product">Add product</a></td>
   </tr>
   <tr>
     <td><kbd>GET /{vendedorId}/listar</kbd></td>
-    <td><a href="#">List products</a></td>
+    <td><a href="#show-list-product">List products</a></td>
   </tr>
   <tr>
     <td><kbd>DELETE /{vendedorId}/produtos/{produtoId}</kbd></td>
-    <td><a href="#">Delete product</a></td>
+    <td><a href="#delete-product">Delete product</a></td>
   </tr>
   <tr>
     <td><kbd>POST /pedidoHistoricoStatus/processar</kbd></td>
@@ -214,7 +214,7 @@ Authorization: Bearer seu_token_aqui
 ]
 ```
 
-<h3 id="insert-product">DELETE /{vendedorId}/produtos/{produtoId}r</h3>
+<h3 id="delete-product">DELETE /{vendedorId}/produtos/{produtoId}r</h3>
 
 **REQUEST**
 ```HTTP
