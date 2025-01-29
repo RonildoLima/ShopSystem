@@ -47,4 +47,5 @@ public class PedidoHistoricoStatusController {
         // Relançar a exceção sem capturá-la e modificar seu tipo
         pedidoHistoricoStatusService.processarPedido(pedidoId, vendedorId, acao);
     }
+
 }

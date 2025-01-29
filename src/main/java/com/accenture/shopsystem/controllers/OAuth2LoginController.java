@@ -1,6 +1,8 @@
 package com.accenture.shopsystem.controllers;
 
 import com.accenture.shopsystem.domain.Vendedor.Vendedor;
+import com.accenture.shopsystem.services.email.EmailService;
+import com.accenture.shopsystem.dtos.email.EmailDto;
 import com.accenture.shopsystem.repositories.VendedorRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,6 +40,14 @@ public class OAuth2LoginController {
             vendedor.setVendedorSetor("Serviços");
 
             vendedorRepository.save(vendedor);
+
+            EmailDto emailDto = new EmailDto ();
+            emailDto.setOwnerRef(nome);
+            emailDto.setEmailFrom("shopsystemsuporte@gmail.com");
+            emailDto.setEmailTo(email);
+            emailDto.setSubject("Cadastro bem-sucedido");
+            emailDto.setText("Olá " + nome + ",\n\nSeu cadastro foi realizado com sucesso!\n\nBem-vindo ao sistema!");
+            EmailService.enviarEmail(emailDto);
         }
         return new RedirectView("/");
     }
