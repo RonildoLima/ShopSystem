@@ -1,7 +1,6 @@
 [JAVA_BADGE]:https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white
 [SPRING_BADGE]: https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white
 [MYSQL_BADGE]:https://img.shields.io/badge/MySQL-%234479A1.svg?style=for-the-badge&logo=mysql&logoColor=white
-[AWS_BADGE]:https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white
 [LOMBOK_BADGE]:https://img.shields.io/badge/Lombok-%2318A558.svg?style=for-the-badge&logo=lombok&logoColor=white
 [JPA_BADGE]:https://img.shields.io/badge/JPA-%2300A3E0.svg?style=for-the-badge&logo=java&logoColor=white
 [JUNIT_BADGE]:https://img.shields.io/badge/JUnit5-25A162.svg?style=for-the-badge&logo=JUnit5&logoColor=white
@@ -12,7 +11,6 @@
 
 <h1 align="center" style="font-weight: bold;">Shop System 💻</h1>
 
-![AWS][AWS_BADGE]
 ![spring][SPRING_BADGE]
 ![java][JAVA_BADGE]
 ![mysql][MYSQL_BADGE]
@@ -58,29 +56,177 @@ run ShopSystemApplication
 
 <h2 id="routes">📍 API Endpoints</h2>
 
-| route                                 | description                                          
-|---------------------------------------|---------------------------------------------------------------------------------------------------------
-| <kbd>POST /user/cadastrar</kbd>       | register a vendor, see [request details](#post-user-detail)
+<table>
+  <tr>
+    <th>Route</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><kbd>POST /pedidos/{vendedorId}</kbd></td>
+    <td><a href="#insert-order">Insert order</a></td>
+  </tr>
+  <tr>
+    <td><kbd>DELETE /pedidos/{pedidoId}/vendedor/{vendedorId}</kbd></td>
+    <td><a href="#delete-order">Delete order</a></td>
+  </tr>
+  <tr>
+    <td><kbd>POST /produtos/adicionar</kbd></td>
+    <td><a href="#insert-product">Add product</a></td>
+  </tr>
+  <tr>
+    <td><kbd>GET /{vendedorId}/listar</kbd></td>
+    <td><a href="#show-list-product">List products</a></td>
+  </tr>
+  <tr>
+    <td><kbd>DELETE /{vendedorId}/produtos/{produtoId}</kbd></td>
+    <td><a href="#delete-product">Delete product</a></td>
+  </tr>
+  <tr>
+    <td><kbd>POST /pedidoHistoricoStatus/processar</kbd></td>
+    <td><a href="#">Process or cancel order</a></td>
+  </tr>
+  <tr>
+    <td><kbd>GET /pedidoHistoricoStatus/gerenciar</kbd></td>
+    <td><a href="#">Show form to process or cancel orders</a></td>
+  </tr>
+  <tr>
+    <td><kbd>GET /test-rabbit</kbd></td>
+    <td><a href="#">Send message</a></td>
+  </tr>
+  <tr>
+    <td><kbd>POST /user/cadastrar</kbd></td>
+    <td><a href="#">Register seller</a></td>
+  </tr>
+  <tr>
+    <td><kbd>GET /user/vendedores</kbd></td>
+    <td><a href="#">List sellers</a></td>
+  </tr>
+</table>
 
-<h3 id="post-user-detail">POST /user/cadastrar</h3>
+<h3 id="insert-order">POST /pedidos/{vendedorId}</h3>
 
 **REQUEST**
 ```json
 {
-  "vendedorNome": "Ronildo",
-  "vendedorSetor": "T.I",
-  "email": "ronildo@example.com",
-  "password": "password1234"
+  "vendedorId": "123456",
+  "produtos": [
+    {
+      "produtoId": "987654",
+      "quantidade": 10
+    },
+    {
+      "produtoId": "654321",
+      "quantidade": 5
+    }
+  ]
 }
 ```
 
 **RESPONSE**
 ```json
 {
-  "vendedorNome": "Ronildo",
-  "vendedorSetor": "T.I",
-  "email": "ronildo@example.com",
-  "password": "null"
+  "id": "abc123",
+  "pedidoDescricao": "Pedido de venda",
+  "pedidoValor": 1000,
+  "pedidoDataHora": "2025-01-28T20:11:41.260Z",
+  "pedidoQuantidade": 10,
+  "produtos": [
+    {
+      "id": "p001",
+      "produto": {
+        "id": "987654",
+        "produtoDescricao": "Produto A",
+        "produtoValor": 100,
+        "produtoDataHoraSaida": "2025-01-28T20:11:41.260Z",
+        "quantidadeEstoque": 990,
+        "descricao": "Descrição do Produto A"
+      },
+      "quantidade": 10,
+      "precoUnitario": 100
+    }
+  ]
+}
+
+```
+
+<h3 id="delete-order">DELETE /pedidos/{pedidoId}/vendedor/{vendedorId}</h3>
+
+**REQUEST**
+```HTTP
+DELETE /pedidos/abc123/vendedor/123456 HTTP/1.1
+Host: api.exemplo.com
+Content-Type: application/json
+Authorization: Bearer seu_token_aqui
+```
+
+**RESPONSE**
+```json
+{
+  "mensagem": "Pedido excluído com sucesso",
+  "pedidoId": "abc123"
+}
+```
+
+<h3 id="insert-product">POST /produtos/adicionar</h3>
+
+**REQUEST**
+```json
+{
+  "produtoDescricao": "Notebook Gamer",
+  "produtoValor": 5500.99,
+  "quantidadeEstoque": 100
+}
+```
+
+**RESPONSE**
+```json
+{
+  "id": "prod-987654",
+  "produtoDescricao": "Notebook Gamer",
+  "produtoValor": 5500.99,
+  "quantidadeEstoque": 100
+}
+```
+
+<h3 id="show-list-product">GET /{vendedorId}/listar</h3>
+
+**REQUEST**
+```HTTP
+GET /6fcab984-6f5c-413e-b6ae-32fdf4707bed/listar HTTP/1.1
+Host: api.exemplo.com
+Content-Type: application/json
+Authorization: Bearer seu_token_aqui
+```
+
+**RESPONSE**
+```json
+[
+  {
+    "id": "0e44840f-1ac7-4f67-8e46-f47332800ab9",
+    "produtoDescricao": "Redmi",
+    "produtoValor": 1500,
+    "produtoDataHoraSaida": "2025-01-25T18:55:15",
+    "quantidadeEstoque": 6,
+    "descricao": null
+  }
+]
+```
+
+<h3 id="delete-product">DELETE /{vendedorId}/produtos/{produtoId}r</h3>
+
+**REQUEST**
+```HTTP
+DELETE /6fcab984-6f5c-413e-b6ae-32fdf4707bed/produtos/0e44840f-1ac7-4f67-8e46-f47332800ab9 HTTP/1.1
+Host: api.exemplo.com
+Content-Type: application/json
+Authorization: Bearer seu_token_aqui
+```
+
+**RESPONSE**
+```json
+{
+  "mensagem": "Produto excluído com sucesso",
+  "produtoId": "0e44840f-1ac7-4f67-8e46-f47332800ab9"
 }
 ```
 
