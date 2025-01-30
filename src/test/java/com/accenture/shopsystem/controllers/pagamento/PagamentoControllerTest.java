@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -61,9 +62,11 @@ public class PagamentoControllerTest {
     
 	@Test
     public void testBuscarPorIdNotFound() throws Exception {
-        when(pagamentoService.buscarPorId(1L)).thenReturn(Optional.empty());
+		UUID id = UUID.randomUUID();
+		
+        when(pagamentoService.buscarPorId(id)).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/pagamentos/1"))
+        mockMvc.perform(get("/pagamentos/" + id))
                 .andExpect(status().isNotFound());
     }
 	
@@ -80,17 +83,21 @@ public class PagamentoControllerTest {
 
     @Test
     public void testDeletarPagamento() throws Exception {
-        when(pagamentoService.deletar(1L)).thenReturn(true);
+		UUID id = UUID.randomUUID();
+    	
+        when(pagamentoService.deletar(id)).thenReturn(true);
 
-        mockMvc.perform(delete("/pagamentos/1"))
+        mockMvc.perform(delete("/pagamentos/" + id))
                 .andExpect(status().isNoContent());
     }
     
     @Test
     public void testDeletarPagamentoNotFound() throws Exception {
-        when(pagamentoService.deletar(1L)).thenReturn(false);
+		UUID id = UUID.randomUUID();
+		
+        when(pagamentoService.deletar(id)).thenReturn(false);
 
-        mockMvc.perform(delete("/pagamentos/1"))
+        mockMvc.perform(delete("/pagamentos/" + id))
                 .andExpect(status().isNotFound());
     }
     

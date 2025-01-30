@@ -54,8 +54,10 @@ public class PagamentoServiceTest {
     @Test
     public void deveBuscarPagamentoPorId() {
         // Cenário
-        Long id = 1L;
-        Pagamento pagamento = new Pagamento(UUID.randomUUID(), id, new BigDecimal("100.00"), "PENDENTE", LocalDateTime.now());
+    	UUID id = UUID.randomUUID();
+        Long pedidoID = 1L;
+        
+        Pagamento pagamento = new Pagamento(UUID.randomUUID(), pedidoID, new BigDecimal("100.00"), "PENDENTE", LocalDateTime.now());
         when(pagamentoRepository.findById(id)).thenReturn(Optional.of(pagamento));
 
         // Ação
@@ -88,7 +90,8 @@ public class PagamentoServiceTest {
     @Test
     public void deveDeletarPagamento() {
         // Cenário
-        Long id = 1L;
+    	UUID id = UUID.randomUUID();
+
         when(pagamentoRepository.existsById(id)).thenReturn(true);
 
         // Ação
