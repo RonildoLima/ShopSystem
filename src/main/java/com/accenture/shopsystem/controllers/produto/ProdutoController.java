@@ -1,6 +1,5 @@
 package com.accenture.shopsystem.controllers.produto;
 
-import com.accenture.shopsystem.controllers.pagamento.PagamentoController;
 import com.accenture.shopsystem.domain.Produto.Produto;
 import com.accenture.shopsystem.dtos.produto.ProdutoRequestDTO;
 import com.accenture.shopsystem.services.produto.ProdutoService;
