@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -36,7 +37,7 @@ public class PagamentoService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<PagamentoDTO> buscarPorId(Long id) {
+    public Optional<PagamentoDTO> buscarPorId(UUID id) {
         return pagamentoRepository.findById(id).map(this::toDTO);
     }
 
@@ -46,7 +47,7 @@ public class PagamentoService {
         return toDTO(salvo);
     }
 
-    public Optional<PagamentoDTO> atualizar(Long id, PagamentoDTO pagamentoDTO) {
+    public Optional<PagamentoDTO> atualizar(UUID id, PagamentoDTO pagamentoDTO) {
         if (pagamentoRepository.existsById(id)) {
             Pagamento pagamento = toEntity(pagamentoDTO);
             Pagamento atualizado = pagamentoRepository.save(pagamento);
@@ -55,7 +56,7 @@ public class PagamentoService {
         return Optional.empty();
     }
 
-    public boolean deletar(Long id) {
+    public boolean deletar(UUID id) {
         if (pagamentoRepository.existsById(id)) {
             pagamentoRepository.deleteById(id);
             return true;
