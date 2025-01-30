@@ -1,4 +1,4 @@
-package com.accenture.shopsystem.shop.system;
+package com.accenture.shopsystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
