@@ -27,3 +27,4 @@ replay_pid*
 /.settings
 /target
 .project
+src/main/resources/application-dev.properties
