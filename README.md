@@ -1,5 +1,5 @@
-<h1 align="center" style="font-weight: bold;">Shop System 💻</h1>
 
+<h1 align="center" style="font-weight: bold;">Shop System 💻</h1>
 
 
 ## 📖 Índice
@@ -23,23 +23,17 @@
 * [Desenvolvedores](#desenvolvedores)
 
 
-
-
-<br>
-
 ## Descrição
 
 Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permitindo colocação, processamento, atualizações e notificações de pedidos sem problemas.
 
-<br>
 
-<br>
 
 ## Desenvolvimento
 
-<br>
 
-<br>
+
+
 
 ## Tecnologias Utilizadas
 
@@ -52,6 +46,7 @@ Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permiti
 ![flyway][FLYWAY_BADGE]
 ![springsecurity][SPRING_SECURITY_BADGE]
 ![thymeleaf][THYMELEAF_BADGE]
+![rabbitmq][RABBITMQ_BADGE]
 
 [JAVA_BADGE]:https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white
 [SPRING_BADGE]: https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white
@@ -63,12 +58,6 @@ Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permiti
 [SPRING_SECURITY_BADGE]:https://img.shields.io/badge/Spring%20Security-6DB33F.svg?style=for-the-badge&logo=Spring-Security&logoColor=white
 [THYMELEAF_BADGE]:https://img.shields.io/badge/Thymeleaf-005F0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white
 [RABBITMQ_BADGE]:https://img.shields.io/badge/-RabbitMQ-FF6600.svg?style=for-the-badge&logo=rabbitmq&logoColor=white
-
-- [Java](https://download.oracle.com/java/17/archive/jdk-17.0.6_windows-x64_bin.msi)
-- [Spring Boot](https://start.spring.io/)
-- [MySQL](https://dev.mysql.com/downloads/installer/)
-- [Git](https://git-scm.com/downloads)
-- [HabbitMQ](https://www.rabbitmq.com/docs/download)
 
 <br>
 
@@ -87,9 +76,9 @@ Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permiti
 ```bash
 git clone https://github.com/RonildoLima/ShopSystem.git
 ```
-**2 -Passo** - Configure as variáveis de ambiente:
+**2 -Passo** - Configure as variáveis para a execução do projeto:
 
-Crie um arquivo `application-dev.properties` na pasta *src/main/resource* do projeto seguindo o modelo do arquivo **[aplication.properties](src/main/resources/application.properties)** do repositório da seguinte maneira:
+Crie um arquivo `application-dev.properties` na pasta *src/main/resource* do projeto, seguindo o modelo do arquivo **[aplication.properties.exemple](src/main/resources/application.properties.example)** do repositório, da seguinte maneira:
 
 ```properties
 spring.application.name=shop-system
@@ -103,8 +92,8 @@ springdoc.swagger-ui.tagsSorter=alpha
 
 ###Database Remote
 
-spring.datasource.url=jdbc:mysql://localhost:3306/shop-v3
-spring.datasource.username=root
+spring.datasource.url=jdbc:mysql://localhost:3306/seu_schema
+spring.datasource.username=username
 spring.datasource.password=password
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.jpa.hibernate.ddl-auto=update
