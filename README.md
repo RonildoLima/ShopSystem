@@ -39,7 +39,7 @@
 - [Java](https://download.oracle.com/java/17/archive/jdk-17.0.6_windows-x64_bin.msi)
 - [Spring Boot](https://start.spring.io/)
 - [MySQL](https://dev.mysql.com/downloads/installer/)
-- [Git 2](https://github.com)
+- [Git](https://git-scm.com/downloads)
 
 <h3>Cloning</h3>
 
