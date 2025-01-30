@@ -1,6 +1,7 @@
 package com.accenture.shopsystem.controllers.pagamento;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class PagamentoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PagamentoDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<PagamentoDTO> buscarPorId(@PathVariable UUID id) {
         return pagamentoService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -50,14 +51,14 @@ public class PagamentoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PagamentoDTO> atualizar(@PathVariable Long id, @RequestBody PagamentoDTO pagamentoDTO) {
+    public ResponseEntity<PagamentoDTO> atualizar(@PathVariable UUID id, @RequestBody PagamentoDTO pagamentoDTO) {
         return pagamentoService.atualizar(id, pagamentoDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         if (pagamentoService.deletar(id)) {
             return ResponseEntity.noContent().build();
         } else {
