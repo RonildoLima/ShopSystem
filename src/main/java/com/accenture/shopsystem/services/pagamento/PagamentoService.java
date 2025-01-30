@@ -1,6 +1,5 @@
 package com.accenture.shopsystem.services.pagamento;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,71 +23,85 @@ import com.accenture.shopsystem.repositories.PagamentoRepository;
 
 @Service
 public class PagamentoService {
-	
+
 	private final PagamentoRepository pagamentoRepository;
-    private final RabbitTemplate rabbitTemplate;
+	private final RabbitTemplate rabbitTemplate;
 
-    public PagamentoService(RabbitTemplate rabbitTemplate, PagamentoRepository pagamentoRepository) {
-        this.pagamentoRepository = pagamentoRepository;
+	private static final Logger logger = LoggerFactory.getLogger(PagamentoService.class);
+
+	public PagamentoService(RabbitTemplate rabbitTemplate, PagamentoRepository pagamentoRepository) {
+		this.pagamentoRepository = pagamentoRepository;
 		this.rabbitTemplate = rabbitTemplate;
-    }
-    
-    public List<PagamentoDTO> listar() {
-        return pagamentoRepository.findAll().stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
+		logger.info("PagamentoService inicializado com sucesso.");
+	}
 
-    public Optional<PagamentoDTO> buscarPorId(UUID id) {
-        return pagamentoRepository.findById(id).map(this::toDTO);
-    }
+	public List<PagamentoDTO> listar() {
+		logger.info("Listando todos os pagamentos.");
+		return pagamentoRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+	}
 
-    public PagamentoDTO criar(PagamentoDTO pagamentoDTO) {
-        Pagamento pagamento = toEntity(pagamentoDTO);
-        Pagamento salvo = pagamentoRepository.save(pagamento);
-        return toDTO(salvo);
-    }
+	public Optional<PagamentoDTO> buscarPorId(UUID id) {
+		logger.info("Buscando pagamento com ID: {}", id);
+		return pagamentoRepository.findById(id).map(this::toDTO);
+	}
 
-    public Optional<PagamentoDTO> atualizar(UUID id, PagamentoDTO pagamentoDTO) {
-        if (pagamentoRepository.existsById(id)) {
-            Pagamento pagamento = toEntity(pagamentoDTO);
-            Pagamento atualizado = pagamentoRepository.save(pagamento);
-            return Optional.of(toDTO(atualizado));
-        }
-        return Optional.empty();
-    }
+	public PagamentoDTO criar(PagamentoDTO pagamentoDTO) {
+		logger.info("Criando pagamento com dados: {}", pagamentoDTO);
+		Pagamento pagamento = toEntity(pagamentoDTO);
+		Pagamento salvo = pagamentoRepository.save(pagamento);
+		logger.info("Pagamento criado com sucesso, ID: {}", salvo.getId());
+		return toDTO(salvo);
+	}
 
-    public boolean deletar(UUID id) {
-        if (pagamentoRepository.existsById(id)) {
-            pagamentoRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
+	public Optional<PagamentoDTO> atualizar(UUID id, PagamentoDTO pagamentoDTO) {
+		logger.info("Atualizando pagamento com ID: {}", id);
+		if (pagamentoRepository.existsById(id)) {
+			Pagamento pagamento = toEntity(pagamentoDTO);
+			Pagamento atualizado = pagamentoRepository.save(pagamento);
+			logger.info("Pagamento atualizado com sucesso, ID: {}", id);
+			return Optional.of(toDTO(atualizado));
+		} else {
+			logger.warn("Pagamento com ID: {} não encontrado para atualização.", id);
+		}
+		return Optional.empty();
+	}
 
-    private PagamentoDTO toDTO(Pagamento pagamento) {
-        return new PagamentoDTO(
-        );
-    }
+	public boolean deletar(UUID id) {
+		logger.info("Deletando pagamento com ID: {}", id);
+		if (pagamentoRepository.existsById(id)) {
+			pagamentoRepository.deleteById(id);
+			logger.info("Pagamento com ID: {} deletado com sucesso.", id);
+			return true;
+		} else {
+			logger.warn("Pagamento com ID: {} não encontrado para deletação.", id);
+		}
+		return false;
+	}
 
-    private Pagamento toEntity(PagamentoDTO pagamentoDTO) {
-        return new Pagamento(
-        );
-    }
+	private PagamentoDTO toDTO(Pagamento pagamento) {
+		return new PagamentoDTO();
+	}
 
+	private Pagamento toEntity(PagamentoDTO pagamentoDTO) {
+		return new Pagamento();
+	}
 
-    @PostMapping("/processar")
-    public ResponseEntity<Map<String, Object>> processarPagamento(@RequestBody PedidoMensagem pedido) {
-        pedido.setStatus("PENDENTE");
-        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_PEDIDOS, "pedidos", pedido);
+	@PostMapping("/processar")
+	public ResponseEntity<Map<String, Object>> processarPagamento(@RequestBody PedidoMensagem pedido) {
+		logger.info("Iniciando processamento de pagamento para o pedido ID: {}", pedido.getPedidoId());
 
-        // Construindo uma resposta personalizada
-        Map<String, Object> resposta = new HashMap<>();
-        resposta.put("mensagem", "Pagamento enviado para processamento.");
-        resposta.put("pedidoId", pedido.getPedidoId());
-        resposta.put("status", pedido.getStatus());
+		pedido.setStatus("PENDENTE");
+		rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_PEDIDOS, "pedidos", pedido);
 
-        return ResponseEntity.ok(resposta);
-    }
+		logger.info("Pedido ID: {} enviado para processamento via RabbitMQ.", pedido.getPedidoId());
+
+		// Construindo uma resposta personalizada
+		Map<String, Object> resposta = new HashMap<>();
+		resposta.put("mensagem", "Pagamento enviado para processamento.");
+		resposta.put("pedidoId", pedido.getPedidoId());
+		resposta.put("status", pedido.getStatus());
+
+		return ResponseEntity.ok(resposta);
+	}
 
 }
