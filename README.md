@@ -48,6 +48,7 @@ Além disso, utilizamos um grupo no **Whatsapp** para comunicação e ligações
 [JUNIT_BADGE]:https://img.shields.io/badge/JUnit5-25A162.svg?style=for-the-badge&logo=JUnit5&logoColor=white
 [FLYWAY_BADGE]:https://img.shields.io/badge/Flyway-%2300A6A0.svg?style=for-the-badge&logo=flyway&logoColor=white
 [SPRING_SECURITY_BADGE]:https://img.shields.io/badge/Spring%20Security-6DB33F.svg?style=for-the-badge&logo=Spring-Security&logoColor=white
+[THYMELEAF_BADGE]:https://img.shields.io/badge/Thymeleaf-005F0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white
 [RABBITMQ_BADGE]:https://img.shields.io/badge/-RabbitMQ-FF6600.svg?style=for-the-badge&logo=rabbitmq&logoColor=white
 
 ## Execução do Projeto
