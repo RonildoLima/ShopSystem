@@ -47,7 +47,7 @@ public class EmailService {
     public Email sendEmail(Email emailModel) {
         emailModel.setSendDateEmail(LocalDateTime.now());
 
-        logger.info("Iniciando envio de e-mail...");
+        logger.info("Email recebido da fila:");
         logger.info("De: {}", emailModel.getEmailFrom());
         logger.info("Para: {}", emailModel.getEmailTo());
         logger.info("Assunto: {}", emailModel.getSubject());
