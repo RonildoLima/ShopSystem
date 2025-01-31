@@ -4,6 +4,8 @@
     <title>Cadastrar Vendedor</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+    
     <style>
         body {
             background-color: #f8f9fa;
@@ -11,12 +13,12 @@
             display: flex;
             justify-content: center; /* Centraliza horizontalmente */
             align-items: center; /* Centraliza verticalmente */
-            font-family: Arial, sans-serif; /* Fonte mais profissional */
-        }
         }
         .card {
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+            max-width: 700px;
+            margin: auto;
         }
         .card-body {
             padding: 2rem;
@@ -24,21 +26,13 @@
         .form-label {
             font-weight: bold; /* Rótulos em negrito */
         }
-        .btn-primary {
-            background-color: #4CAF50; /* Botão verde */
-            border-color: #4CAF50;
-        }
-        .btn-primary:hover {
-            background-color: #45a049; /* Efeito ao passar o mouse */
-            border-color: #45a049;
-        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="card shadow">
         <div class="card-body">
-            <h1 class="text-center mb-4" style="color: #4CAF50;">Cadastrar</h1>
+            <h1 class="text-center mb-4">Cadastrar</h1>
             <form th:action="@{/user/cadastrar}" method="post" class="mt-4">
                 <!-- Nome -->
                 <div class="mb-3">

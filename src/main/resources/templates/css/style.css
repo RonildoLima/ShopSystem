@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    font-family: Roboto; /* Fonte mais profissional */
+}
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+    max-width: 700px;
+    margin: auto;
+}
+.card-body {
+    padding: 2rem;
+}
+h1 {
+    color: #3a843d;
+    font-weight: bold;
+}
+.navbar {
+    background-color: #3a843d; /* Cor verde para a Navbar */
+    font-size: large;
+}
+.navbar-brand {
+    font-weight: bold;
+    color: white;
+}
+.navbar-nav .nav-link {
+    color: white;
+    font-weight: bold;
+}
+.navbar-nav .nav-link:hover {
+    color: #38803b;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    filter: drop-shadow(0 0 0.25rem #00000052);
+}
+.btn-primary {
+    background-color: #3a843d; /* Botão verde */
+    border-color: #3a843d;
+}
+.btn-primary:hover {
+    background-color: #2d682e;
+    border-color: #2d682e;
+    filter: drop-shadow(0 0 0.25rem #0000004f);
+}
