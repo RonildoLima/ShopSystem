@@ -13,10 +13,6 @@ Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permiti
 
 * [Execução](#execução-do-projeto)
 
-* [Arquitetura](#️arquitetura)
-
-* [Dificuldades](#dificuldades)
-
 * [Desenvolvedores](#desenvolvedores)
 
 
