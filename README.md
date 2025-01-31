@@ -268,7 +268,10 @@ Authorization: Bearer seu_token_aqui
 
 **REQUEST**
 ```HTTP
-curl -X 'GET' 'http://localhost:8080/user/vendedores' -H 'accept: */*'
+GET /user/vendedores HTTP/1.1
+Host: api.exemplo.com
+Content-Type: application/json
+Authorization: Bearer seu_token_aqui
 ```
 
 **RESPONSE**
