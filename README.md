@@ -16,7 +16,7 @@ Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permiti
 * [Desenvolvedores](#desenvolvedores)
 
 
-## ⚡ Desenvolvimento id="desenvolvimento"
+## ⚡ Desenvolvimento
 
 No projeto, utilizamos o **Trello** para organizar as tarefas em colunas que refletiam nosso fluxo de trabalho: 
 - **Backlog** para recursos úteis
