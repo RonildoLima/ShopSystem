@@ -39,6 +39,7 @@ Além disso, utilizamos um grupo no **Whatsapp** para comunicação e ligações
 ![springsecurity][SPRING_SECURITY_BADGE]
 ![thymeleaf][THYMELEAF_BADGE]
 ![rabbitmq][RABBITMQ_BADGE]
+![OAuth 2][OAUTH2_BADGE]
 
 [JAVA_BADGE]:https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white
 [SPRING_BADGE]: https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white
@@ -50,6 +51,7 @@ Além disso, utilizamos um grupo no **Whatsapp** para comunicação e ligações
 [SPRING_SECURITY_BADGE]:https://img.shields.io/badge/Spring%20Security-6DB33F.svg?style=for-the-badge&logo=Spring-Security&logoColor=white
 [THYMELEAF_BADGE]:https://img.shields.io/badge/Thymeleaf-005F0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white
 [RABBITMQ_BADGE]:https://img.shields.io/badge/-RabbitMQ-FF6600.svg?style=for-the-badge&logo=rabbitmq&logoColor=white
+[OAUTH2_BADGE]:https://img.shields.io/badge/OAuth2%20Google-4285F4.svg?style=for-the-badge&logo=Google&logoColor=white
 
 ## Execução do Projeto
 
