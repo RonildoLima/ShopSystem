@@ -24,14 +24,6 @@ public class RabbitMqConfig {
     public static final String EMAIL_ROUTING_KEY = "email.routingkey"; // Nova routing key
 
     @Bean
-    public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory factory = new CachingConnectionFactory("localhost");
-        factory.setUsername("guest");
-        factory.setPassword("guest");
-        return factory;
-    }
-
-    @Bean
     public Queue pedidoQueue() {
         return new Queue(PEDIDO_QUEUE, true);
     }
