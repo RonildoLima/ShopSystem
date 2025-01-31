@@ -83,23 +83,15 @@ run ShopSystemApplication
   </tr>
   <tr>
     <td><kbd>POST /pedidoHistoricoStatus/processar</kbd></td>
-    <td><a href="#">Process or cancel order</a></td>
-  </tr>
-  <tr>
-    <td><kbd>GET /pedidoHistoricoStatus/gerenciar</kbd></td>
-    <td><a href="#">Show form to process or cancel orders</a></td>
-  </tr>
-  <tr>
-    <td><kbd>GET /test-rabbit</kbd></td>
-    <td><a href="#">Send message</a></td>
+    <td><a href="#process-order">Process or cancel order</a></td>
   </tr>
   <tr>
     <td><kbd>POST /user/cadastrar</kbd></td>
-    <td><a href="#">Register seller</a></td>
+    <td><a href="#register-seller">Register seller</a></td>
   </tr>
   <tr>
     <td><kbd>GET /user/vendedores</kbd></td>
-    <td><a href="#">List sellers</a></td>
+    <td><a href="#list-seller">List sellers</a></td>
   </tr>
 </table>
 
@@ -228,6 +220,77 @@ Authorization: Bearer seu_token_aqui
   "mensagem": "Produto excluído com sucesso",
   "produtoId": "0e44840f-1ac7-4f67-8e46-f47332800ab9"
 }
+```
+<h3 id="process-order">POST /pedidoHistoricoStatus/processar</h3>
+
+**REQUEST**
+```json
+{
+  "pedidold": "123456",
+  "acao": "cancelar"
+}
+```
+
+**RESPONSE**
+```json
+{
+  "pedidoId": "123456",
+  "status": "CANCELADO",  
+  "acao": "cancelar"
+}
+```
+
+<h3 id="register-seller">POST /user/cadastrar</h3>
+
+**REQUEST**
+```json
+{
+  "vendedorNome": "João Silva",
+  "vendedorSetor": "Vendas",
+  "email": "joao.silva@email.com",
+  "password": "senha123"
+}
+```
+
+**RESPONSE**
+```json
+{
+  "mensagem": "Vendedor cadastrado com sucesso.",
+  "vendedor": {
+    "vendedorNome": "João Silva",
+    "vendedorSetor": "Vendas",
+    "email": "joao.silva@email.com",
+    "password": null
+  }
+}
+```
+<h3 id="list-seller">GET /user/vendedores</h3>
+
+**REQUEST**
+```HTTP
+curl -X 'GET' 'http://localhost:8080/user/vendedores' -H 'accept: */*'
+```
+
+**RESPONSE**
+```json
+[
+  {
+    "id": "3fea09cc-4812-4371-b48e-f6197343d3eb",
+    "email": "ronildo@email.com",
+    "password": "$2a$10$hB/cUbdwbxahbNXyS.5yenQMLEmRnTFGI0d/LItRBmQ16.RSSS",
+    "vendedorNome": "Ronildo",
+    "vendedorSetor": "TI",
+    "roles": ["USER"]
+  },
+  {
+    "id": "cafbcf89-c6a9-4569-87b7-82ad9a276929",
+    "email": "ronilolima229@gmail.com",
+    "password": "$2a$10$yAk4xKjmDv1Y67C7dwOpD9p.72d63CJLJhaLZ5315LiW/m180Q1pTXe",
+    "vendedorNome": "Ronildo Lima",
+    "vendedorSetor": "Serviços",
+    "roles": ["USER"]
+  }
+]
 ```
 
 <h2 id="colab">🤝 Collaborators</h2>
