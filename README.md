@@ -1,10 +1,13 @@
 
 <h1 align="center" style="font-weight: bold;">Shop System 💻</h1>
 
+**Descrição**
+
+Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permitindo colocação, processamento, atualizações e notificações de pedidos sem problemas.
+
+
 
 ## 📖 Índice
-
-* [Descrição](#descrição)
 
 * [Desenvolvimento](#desenvolvimento)
   
@@ -12,9 +15,8 @@
 
 * [Estrutura de pastas](#estrutura-de-pastas)
 
-* [Execução](#execução)
+* [Execução](#execução-do-projeto)
 
-* [Acesso](#acesso)
 
 * [Arquitetura](#️arquitetura)
 
@@ -23,15 +25,16 @@
 * [Desenvolvedores](#desenvolvedores)
 
 
-## Descrição
+## ⚡Desenvolvimento
 
-Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permitindo colocação, processamento, atualizações e notificações de pedidos sem problemas.
+No projeto, utilizamos o **Trello** para organizar as tarefas em colunas que refletiam nosso fluxo de trabalho: 
+- **Backlog** para recursos úteis
+- **A fazer** para tarefas planejadas como configuração de ambiente e logs
+- **Em andamento** para o desenvolvimento dos módulos pagamento, estoque e pedido
+- **Aguardando/Impedido** para gerenciar bloqueios
+- **Concluído** armazenava as tarefas finalizadas
 
-
-
-## Desenvolvimento
-
-
+Além disso, utilizamos um grupo no **Whatsapp** para comunicação e ligações no **Meet** para dúvidas e desenvolvimentos síncronos.
 
 
 
@@ -59,15 +62,9 @@ Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permiti
 [THYMELEAF_BADGE]:https://img.shields.io/badge/Thymeleaf-005F0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white
 [RABBITMQ_BADGE]:https://img.shields.io/badge/-RabbitMQ-FF6600.svg?style=for-the-badge&logo=rabbitmq&logoColor=white
 
-<br>
-
-<br>
 
 ## Estrutura de pastas
 
-<br>
-
-<br>
 
 ## Execução do Projeto
 
@@ -111,41 +108,31 @@ rabbitmq.exchange=pedido-exchange
 rabbitmq.routingkey.pedido=pedido.routingkey
 rabbitmq.routingkey.quantidade=quantidade.routingkey
 ```
+**Passo 3** - Baixe o MySQL Workbranch, crie um schema com o nome que por no `.properties`
 
-**Passo 3** - Execute o projeto SpringBoot em sua máquina
+**Passo 4** - Baixe o [RabbitMQ](https://www.rabbitmq.com/docs/download)
 
-<br>
+**Passo 5** - Execute o projeto SpringBoot em sua máquina
 
-<br>
 
-## Acesso
 
-<br>
 
-<br>
+
 
 ## Arquitetura
 
-<br>
 
-<br>
 
 ## Dificuldades
 
-<br>
 
-<br>
 
 ##  Desenvolvedores
 
-<br>
 
 
-<p align="center">
- <a href="#started">Getting Started</a> • 
-  <a href="#routes">API Endpoints</a> •
- <a href="#colab">Collaborators</a> •
-</p>
+
+
 
 
 
