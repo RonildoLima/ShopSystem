@@ -1,11 +1,9 @@
 
 <h1 align="center" style="font-weight: bold;">Shop System 💻</h1>
 
-**Descrição**
+## 📚Descrição
 
 Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permitindo colocação, processamento, atualizações e notificações de pedidos sem problemas.
-
-
 
 ## 📖 Índice
 
@@ -13,10 +11,7 @@ Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permiti
   
 * [Tecnologias Utilizadas](#tecnologias-utilizadas)
 
-* [Estrutura de pastas](#estrutura-de-pastas)
-
 * [Execução](#execução-do-projeto)
-
 
 * [Arquitetura](#️arquitetura)
 
@@ -25,7 +20,7 @@ Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permiti
 * [Desenvolvedores](#desenvolvedores)
 
 
-## ⚡Desenvolvimento
+## ⚡ Desenvolvimento
 
 No projeto, utilizamos o **Trello** para organizar as tarefas em colunas que refletiam nosso fluxo de trabalho: 
 - **Backlog** para recursos úteis
@@ -36,9 +31,7 @@ No projeto, utilizamos o **Trello** para organizar as tarefas em colunas que ref
 
 Além disso, utilizamos um grupo no **Whatsapp** para comunicação e ligações no **Meet** para dúvidas e desenvolvimentos síncronos.
 
-
-
-## Tecnologias Utilizadas
+## ⚙️ Tecnologias Utilizadas
 
 ![spring][SPRING_BADGE]
 ![java][JAVA_BADGE]
@@ -62,10 +55,6 @@ Além disso, utilizamos um grupo no **Whatsapp** para comunicação e ligações
 [THYMELEAF_BADGE]:https://img.shields.io/badge/Thymeleaf-005F0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white
 [RABBITMQ_BADGE]:https://img.shields.io/badge/-RabbitMQ-FF6600.svg?style=for-the-badge&logo=rabbitmq&logoColor=white
 
-
-## Estrutura de pastas
-
-
 ## Execução do Projeto
 
 **1 Passo** - Clone o repositório para a sua máquina
@@ -75,39 +64,8 @@ git clone https://github.com/RonildoLima/ShopSystem.git
 ```
 **2 -Passo** - Configure as variáveis para a execução do projeto:
 
-Crie um arquivo `application-dev.properties` na pasta *src/main/resource* do projeto, seguindo o modelo do arquivo **[aplication.properties.exemple](src/main/resources/application.properties.example)** do repositório, da seguinte maneira:
+Crie um arquivo `application-dev.properties` na pasta *src/main/resource* do projeto, seguindo o modelo do arquivo **[aplication.properties.exemple](src/main/resources/application.properties.example)** do repositório.
 
-```properties
-spring.application.name=shop-system
-
-##Swagger
-springdoc.swagger-ui.path=/api-docs.html
-springdoc.api-docs.path=/api-docs
-springdoc.packages-to-scan=com.accenture.shopsystem
-
-springdoc.swagger-ui.tagsSorter=alpha
-
-###Database Remote
-
-spring.datasource.url=jdbc:mysql://localhost:3306/seu_schema
-spring.datasource.username=username
-spring.datasource.password=password
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
-
-##LOGS
-#spring.jpa.properties.hibernate.format_sql=true
-#spring.jpa.properties.hibernate.use_sql_comments=true
-#logging.level.org.hibernate.type=trace
-
-##RabbitMQ Remote
-rabbitmq.queue.pedido=pedido-queue
-rabbitmq.exchange=pedido-exchange
-rabbitmq.routingkey.pedido=pedido.routingkey
-rabbitmq.routingkey.quantidade=quantidade.routingkey
-```
 **Passo 3** - Baixe o MySQL Workbranch, crie um schema com o nome que por no `.properties`
 
 **Passo 4** - Baixe o [RabbitMQ](https://www.rabbitmq.com/docs/download)
@@ -115,38 +73,7 @@ rabbitmq.routingkey.quantidade=quantidade.routingkey
 **Passo 5** - Execute o projeto SpringBoot em sua máquina
 
 
-
-
-
-
-## Arquitetura
-
-
-
-## Dificuldades
-
-
-
-##  Desenvolvedores
-
-
-
-
-
-
-
-
-
-
-
-<h3>Starting</h3>
-
-```bash
-cd ShopSystem
-run ShopSystemApplication
-```
-
-<h2 id="routes">📍 API Endpoints</h2>
+## 📍API Endpoints
 
 <table>
   <tr>
@@ -388,35 +315,9 @@ Authorization: Bearer seu_token_aqui
 ]
 ```
 
-<h2 id="colab">🤝 Collaborators</h2>
+## 🤝 Desenvolvedores
 
-Special thank you for all people that contributed for this project.
-
-<table>
-  <tr>
-    <td align="center">
-      <a href="#">
-        <img src="https://avatars.githubusercontent.com/u/80013701?v=4" width="100px;" alt="Ronildo Lima Profile Picture"/><br>
-        <sub>
-          <b>Ronildo Lima</b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="#">
-        <img src="https://avatars.githubusercontent.com/u/110574063?v=4" width="100px;" alt="Rayane Rodrigues Profile Picture"/><br>
-        <sub>
-          <b>Rayane Rodrigues</b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="#">
-        <img src="https://avatars.githubusercontent.com/u/100695815?v=4" width="100px;" alt="Tamires Xavier Profile Picture"/><br>
-        <sub>
-          <b>Tamires Xavier</b>
-        </sub>
-      </a>
-    </td>
-  </tr>
-</table>
+Obrigado especial por todas as pessoas que contribuíram para este projeto.
+ 
+| [<img loading="lazy" src="https://avatars.githubusercontent.com/u/80013701?v=4" width=115><br><sub>Ronildo Lima</sub>](https://github.com/RonildoLima) |  [<img loading="lazy" src="https://avatars.githubusercontent.com/u/110574063?v=4" width=115><br><sub>Rayane Rodrigues</sub>](https://github.com/RaVeNsszz) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/100695815?v=4" width=115><br><sub>Tamires Xavier</sub>](https://github.com/tamiresxavier) 
+| :---: | :---: | :---: |
