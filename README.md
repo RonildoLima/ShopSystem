@@ -1,15 +1,37 @@
-[JAVA_BADGE]:https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white
-[SPRING_BADGE]: https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white
-[MYSQL_BADGE]:https://img.shields.io/badge/MySQL-%234479A1.svg?style=for-the-badge&logo=mysql&logoColor=white
-[LOMBOK_BADGE]:https://img.shields.io/badge/Lombok-%2318A558.svg?style=for-the-badge&logo=lombok&logoColor=white
-[JPA_BADGE]:https://img.shields.io/badge/JPA-%2300A3E0.svg?style=for-the-badge&logo=java&logoColor=white
-[JUNIT_BADGE]:https://img.shields.io/badge/JUnit5-25A162.svg?style=for-the-badge&logo=JUnit5&logoColor=white
-[FLYWAY_BADGE]:https://img.shields.io/badge/Flyway-%2300A6A0.svg?style=for-the-badge&logo=flyway&logoColor=white
-[SPRING_SECURITY_BADGE]:https://img.shields.io/badge/Spring%20Security-6DB33F.svg?style=for-the-badge&logo=Spring-Security&logoColor=white
-[THYMELEAF_BADGE]:https://img.shields.io/badge/Thymeleaf-005F0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white
-
 
 <h1 align="center" style="font-weight: bold;">Shop System 💻</h1>
+
+## 📚Descrição
+
+Sistema de gerenciamento de pedidos com suporte para mensagens RabbitMQ, permitindo colocação, processamento, atualizações e notificações de pedidos sem problemas.
+
+## 📖 Índice
+
+* [Desenvolvimento](#desenvolvimento)
+  
+* [Tecnologias Utilizadas](#tecnologias-utilizadas)
+
+* [Execução](#execução-do-projeto)
+
+* [Arquitetura](#️arquitetura)
+
+* [Dificuldades](#dificuldades)
+
+* [Desenvolvedores](#desenvolvedores)
+
+
+## ⚡ Desenvolvimento
+
+No projeto, utilizamos o **Trello** para organizar as tarefas em colunas que refletiam nosso fluxo de trabalho: 
+- **Backlog** para recursos úteis
+- **A fazer** para tarefas planejadas como configuração de ambiente e logs
+- **Em andamento** para o desenvolvimento dos módulos pagamento, estoque e pedido
+- **Aguardando/Impedido** para gerenciar bloqueios
+- **Concluído** armazenava as tarefas finalizadas
+
+Além disso, utilizamos um grupo no **Whatsapp** para comunicação e ligações no **Meet** para dúvidas e desenvolvimentos síncronos.
+
+## ⚙️ Tecnologias Utilizadas
 
 ![spring][SPRING_BADGE]
 ![java][JAVA_BADGE]
@@ -20,41 +42,38 @@
 ![flyway][FLYWAY_BADGE]
 ![springsecurity][SPRING_SECURITY_BADGE]
 ![thymeleaf][THYMELEAF_BADGE]
+![rabbitmq][RABBITMQ_BADGE]
 
+[JAVA_BADGE]:https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white
+[SPRING_BADGE]: https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white
+[MYSQL_BADGE]:https://img.shields.io/badge/MySQL-%234479A1.svg?style=for-the-badge&logo=mysql&logoColor=white
+[LOMBOK_BADGE]:https://img.shields.io/badge/Lombok-%2318A558.svg?style=for-the-badge&logo=lombok&logoColor=white
+[JPA_BADGE]:https://img.shields.io/badge/JPA-%2300A3E0.svg?style=for-the-badge&logo=java&logoColor=white
+[JUNIT_BADGE]:https://img.shields.io/badge/JUnit5-25A162.svg?style=for-the-badge&logo=JUnit5&logoColor=white
+[FLYWAY_BADGE]:https://img.shields.io/badge/Flyway-%2300A6A0.svg?style=for-the-badge&logo=flyway&logoColor=white
+[SPRING_SECURITY_BADGE]:https://img.shields.io/badge/Spring%20Security-6DB33F.svg?style=for-the-badge&logo=Spring-Security&logoColor=white
+[THYMELEAF_BADGE]:https://img.shields.io/badge/Thymeleaf-005F0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white
+[RABBITMQ_BADGE]:https://img.shields.io/badge/-RabbitMQ-FF6600.svg?style=for-the-badge&logo=rabbitmq&logoColor=white
 
-<p align="center">
- <a href="#started">Getting Started</a> • 
-  <a href="#routes">API Endpoints</a> •
- <a href="#colab">Collaborators</a> •
-</p>
+## Execução do Projeto
 
-<p align="center">
-  <b>Order management system with support for RabbitMQ messaging, enabling seamless order placement, processing, updates, and notifications.</b>
-</p>
-
-<h2 id="started">🚀 Getting started</h2>
-
-<h3>Prerequisites</h3>
-
-- [Java](https://download.oracle.com/java/17/archive/jdk-17.0.6_windows-x64_bin.msi)
-- [Spring Boot](https://start.spring.io/)
-- [MySQL](https://dev.mysql.com/downloads/installer/)
-- [Git](https://git-scm.com/downloads)
-
-<h3>Cloning</h3>
+**1 Passo** - Clone o repositório para a sua máquina
 
 ```bash
 git clone https://github.com/RonildoLima/ShopSystem.git
 ```
+**2 -Passo** - Configure as variáveis para a execução do projeto:
 
-<h3>Starting</h3>
+Crie um arquivo `application-dev.properties` na pasta *src/main/resource* do projeto, seguindo o modelo do arquivo **[aplication.properties.exemple](src/main/resources/application.properties.example)** do repositório.
 
-```bash
-cd ShopSystem
-run ShopSystemApplication
-```
+**Passo 3** - Baixe o MySQL Workbranch, crie um schema com o nome que por no `.properties`
 
-<h2 id="routes">📍 API Endpoints</h2>
+**Passo 4** - Baixe o [RabbitMQ](https://www.rabbitmq.com/docs/download)
+
+**Passo 5** - Execute o projeto SpringBoot em sua máquina
+
+
+## 📍API Endpoints
 
 <table>
   <tr>
@@ -296,35 +315,9 @@ Authorization: Bearer seu_token_aqui
 ]
 ```
 
-<h2 id="colab">🤝 Collaborators</h2>
+## 🤝 Desenvolvedores
 
-Special thank you for all people that contributed for this project.
-
-<table>
-  <tr>
-    <td align="center">
-      <a href="#">
-        <img src="https://avatars.githubusercontent.com/u/80013701?v=4" width="100px;" alt="Ronildo Lima Profile Picture"/><br>
-        <sub>
-          <b>Ronildo Lima</b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="#">
-        <img src="https://avatars.githubusercontent.com/u/110574063?v=4" width="100px;" alt="Rayane Rodrigues Profile Picture"/><br>
-        <sub>
-          <b>Rayane Rodrigues</b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="#">
-        <img src="https://avatars.githubusercontent.com/u/100695815?v=4" width="100px;" alt="Tamires Xavier Profile Picture"/><br>
-        <sub>
-          <b>Tamires Xavier</b>
-        </sub>
-      </a>
-    </td>
-  </tr>
-</table>
+Obrigado especial por todas as pessoas que contribuíram para este projeto.
+ 
+| [<img loading="lazy" src="https://avatars.githubusercontent.com/u/80013701?v=4" width=115><br><sub>Ronildo Lima</sub>](https://github.com/RonildoLima) |  [<img loading="lazy" src="https://avatars.githubusercontent.com/u/110574063?v=4" width=115><br><sub>Rayane Rodrigues</sub>](https://github.com/RaVeNsszz) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/100695815?v=4" width=115><br><sub>Tamires Xavier</sub>](https://github.com/tamiresxavier) 
+| :---: | :---: | :---: |

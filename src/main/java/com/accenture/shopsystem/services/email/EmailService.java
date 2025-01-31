@@ -29,6 +29,7 @@ public class EmailService {
 
     public EmailService(RabbitTemplate rabbitTemplate) {
         EmailService.rabbitTemplate = rabbitTemplate;
+        logger.info("EmailService inicializado com RabbitTemplate.");
     }
 
     @Autowired
@@ -40,17 +41,19 @@ public class EmailService {
     JavaMailSender emailSender;
 
     public static void enviarEmail(EmailDto emailDto) {
+    	logger.info("Enviando e-mail para a fila: email-queue.");
+        logger.debug("Detalhes do e-mail: {}", emailDto);
         rabbitTemplate.convertAndSend("email-queue", emailDto);
+        logger.info("E-mail enviado para a fila com sucesso.");
     }
 
     @Transactional
     public Email sendEmail(Email emailModel) {
-        emailModel.setSendDateEmail(LocalDateTime.now());
+    	emailModel.setSendDateEmail(LocalDateTime.now());
 
-        logger.info("Email recebido da fila:");
-        logger.info("De: {}", emailModel.getEmailFrom());
-        logger.info("Para: {}", emailModel.getEmailTo());
-        logger.info("Assunto: {}", emailModel.getSubject());
+        logger.info("Iniciando envio de e-mail...");
+        logger.debug("Dados do e-mail: De: {}, Para: {}, Assunto: {}", 
+            emailModel.getEmailFrom(), emailModel.getEmailTo(), emailModel.getSubject());
 
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -75,10 +78,20 @@ public class EmailService {
     }
 
     public Page<Email> findAll(Pageable pageable) {
-        return  emailRepository.findAll(pageable);
+    	logger.info("Buscando todos os e-mails paginados...");
+        Page<Email> emails = emailRepository.findAll(pageable);
+        logger.info("Total de e-mails encontrados: {}", emails.getTotalElements());
+        return emails;
     }
 
     public Optional<Email> findById(UUID emailId) {
-        return emailRepository.findById(emailId);
+        logger.info("Buscando e-mail com ID: {}", emailId);
+        Optional<Email> email = emailRepository.findById(emailId);
+        if (email.isPresent()) {
+            logger.info("E-mail encontrado: {}", email.get());
+        } else {
+            logger.warn("E-mail com ID {} não encontrado.", emailId);
+        }
+        return email;
     }
 }

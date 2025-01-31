@@ -7,57 +7,57 @@ import com.accenture.shopsystem.repositories.PedidoHistoricoStatusRepository;
 import com.accenture.shopsystem.repositories.PedidoRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 
 @Service
 public class PedidoHistoricoStatusService {
 
-    private final PedidoHistoricoStatusRepository pedidoHistoricoStatusRepository;
-    private final PedidoRepository pedidoRepository;
+	private static final Logger logger = LoggerFactory.getLogger(PedidoHistoricoStatusService.class);
+
+    private final PedidoValidator pedidoValidator;
     private final RabbitTemplate rabbitTemplate;
 
-    public PedidoHistoricoStatusService(PedidoHistoricoStatusRepository pedidoHistoricoStatusRepository,
-                                        PedidoRepository pedidoRepository,
-                                        RabbitTemplate rabbitTemplate) {
-        this.pedidoHistoricoStatusRepository = pedidoHistoricoStatusRepository;
-        this.pedidoRepository = pedidoRepository;
+    public PedidoHistoricoStatusService(PedidoValidator pedidoValidator, RabbitTemplate rabbitTemplate) {
+        this.pedidoValidator = pedidoValidator;
         this.rabbitTemplate = rabbitTemplate;
     }
 
     public void processarPedido(String pedidoId, String vendedorId, String acao) {
-        Pedido pedido = pedidoRepository.findById(pedidoId)
-                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado para o ID: " + pedidoId));
+    	logger.info("Iniciando o processamento do pedido com ID: {}", pedidoId);
 
-        if (!pedido.getVendedor().getId().equals(vendedorId)) {
-            throw new IllegalArgumentException("Vendedor não autorizado a atualizar este pedido.");
-        }
+        Pedido pedido = pedidoValidator.validarPedidoExistente(pedidoId);
+        pedidoValidator.validarVendedorAutorizado(pedido, vendedorId);
 
-        PedidoHistoricoStatus historico = pedidoHistoricoStatusRepository.findByPedidoId(pedidoId)
-                .orElseThrow(() -> new IllegalArgumentException("Histórico de pedido não encontrado para o ID: " + pedidoId));
-
-        if (historico.getStatusPedido() == StatusPedidoEnum.PAGO || historico.getStatusPedido() == StatusPedidoEnum.CANCELADO) {
-            throw new IllegalArgumentException("O pedido já está com o status: " + historico.getStatusPedido() + " e não pode ser alterado.");
-        }
+        PedidoHistoricoStatus historico = pedidoValidator.validarHistoricoExistente(pedidoId);
+        pedidoValidator.validarStatusAlteracao(historico);
 
         if ("PROCESSAR".equalsIgnoreCase(acao)) {
             historico.setDataHoraPagamento(LocalDateTime.now());
             historico.setStatusPedido(StatusPedidoEnum.PAGO);
+            logger.info("O pedido com ID: {} foi processado e marcado como PAGO.", pedidoId);
         } else if ("CANCELAR".equalsIgnoreCase(acao)) {
             historico.setStatusPedido(StatusPedidoEnum.CANCELADO);
+            logger.info("O pedido com ID: {} foi cancelado.", pedidoId);
         } else {
+            logger.error("Ação inválida fornecida para o pedido com ID: {}", pedidoId);
             throw new IllegalArgumentException("Ação inválida: " + acao);
         }
+
         rabbitTemplate.convertAndSend("status-queue", historico);
+        logger.info("Status do pedido com ID: {} foi enviado para a fila RabbitMQ.", pedidoId);
     }
 
 
     public Iterable<PedidoHistoricoStatus> listarHistoricos() {
-        return pedidoHistoricoStatusRepository.findAll();
+    	logger.info("Listando todos os históricos de pedidos.");
+    	return pedidoValidator.listarTodosHistoricos();
     }
 
     public PedidoHistoricoStatus buscarPorId(String id) {
-        return pedidoHistoricoStatusRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Histórico de status não encontrado para o ID: " + id));
+    	logger.info("Buscando histórico de status pelo ID: {}", id);
+        return pedidoValidator.validarHistoricoExistente(id);
     }
 }
